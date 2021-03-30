@@ -3,12 +3,14 @@ from view.vacina import TelaVacina
 
 class ControlVacina():
     def __init__(self):
+        self.__tela_vacina = TelaVacina(self)
         self.__vacinas = []
     
-    def add_vacina(self, vacina: Vacina):
-        if isinstance(vacina, Vacina):
-            for _ in range(qtd):
-                self.__vacinas.append(vacina)
+    def add_vacina(self, vacina: Vacina, qtd):
+        dados_vacina = self.__tela_vacina.cadastro_vacina()
+        vacina = Vacina(dados_vacina['nome'])
+        for _ in range(qtd):
+            self.__vacinas.append(vacina)
     
     def del_vacina(self, vacina: Vacina):
         if isinstance(vacina, Vacina):

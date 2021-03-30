@@ -1,16 +1,19 @@
-from control_vacina import ControlVacina
+from tela_sistema import TelaSistema
+from menu import Menu
+from control.control_vacina import ControlVacina
 
 class TelaVacina():
     
     def __init__(self):
-        opcoes = {
-            0: Voltar
-            1: Cadastrar Vacina
-            2: Excluir Vacina
-            3: Alterar info vacina
-            4: Listar Vacinas
+        opcoes_vacina = {
+            0: 'Voltar',
+            1: 'Cadastrar Vacina',
+            2: 'Excluir Vacina',
+            3: 'Alterar info vacina',
+            4: 'Listar Vacinas',
         }
-        self.__menu = Menu('Opções Vacina', opcoes)
+        self.__menu = Menu('Opções Vacina', opcoes_vacina)
+        self.__controlador = ControlVacina()
     
     def interaja(self):
         terminar = False
@@ -18,19 +21,34 @@ class TelaVacina():
             menu = self.__menu
             opcao = menu.pergunte()
             if opcao == 0:
-                pass
+                TelaSistema.inicie()
             elif opcao == 1:
-                nome_vacina = input('Qual o nome do fabricante? ')
-                qtd = int(input('Quantas doses deseja adicionar? '))
-                control_vacina.add_vacina(Vacina(nome_vacina, qtd))
-                print('{} doses da vacina {} foram adicionadas ao estoque'.format(qtd, nome_vacina))
+                self.cadastro_vacina
             elif opcao == 2:
-                nome_vacina = input('Qual o nome do fabricante? ')
-                qtd = int(input('Quantas doses deseja excluir? '))
-                control_vacina.del_vacina(Vacina(nome_vacina, qtd))
-                print('{} doses da vacina {} foram excluídas do estoque'.format(qtd, nome_vacina))
+                self.exclui_vacina
             elif opcao == 3:
-                control_vacina.setter_vacina()
+                self.altera_vacina
             elif opcao == 4:
-                print('Vacinas em estoque: ')
-                control_vacina.get_vacinas()
+                self.estoque_vacinas
+    
+    def cadastro_vacina(self):
+        nome_vacina = input('Qual o nome do fabricante? ')
+        qtd = int(input('Quantas doses deseja adicionar? '))
+        self.__controlador.add_vacina(Vacina(nome_vacina), qtd)
+        print('{} doses da vacina {} foram adicionadas ao estoque'.format(qtd, nome_vacina))
+    
+    def exclui_vacina(self):
+        continuar = True
+        while continuar:
+            nome_vacina = input('Qual o nome do fabricante? ')
+            continuar = 'y' == input('Tem certeza que deseja excluir {}? [y/n]'.format(nome_vacina))
+            continuar = 'y' == input('Informar outra vacina? [y/n]')
+            self.__controlador.del_vacina(Vacina(nome_vacina))
+            input('Tecle ENTER para continuar.')
+            print('A vacina {} foi excluída do estoque'.format(nome_vacina))
+    
+    def altera_vacina(self):
+        pass
+
+    def estoque_vacinas(self):
+        pass
