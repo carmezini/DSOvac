@@ -33,4 +33,3 @@ class Enfermeiro(Pessoa):
     def matricula(self, matricula):
         if isinstance(matricula, str):
             self.__matricula = matricula
-
