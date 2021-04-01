@@ -3,24 +3,30 @@ from view.vacina import TelaVacina
 
 class ControlVacina():
     def __init__(self):
-        self.__tela_vacina = TelaVacina(self)
         self.__vacinas = []
+        self.__tela_vacina = TelaVacina(self)
     
-    def add_vacina(self, vacina: Vacina, qtd):
-        dados_vacina = self.__tela_vacina.cadastro_vacina()
-        vacina = Vacina(dados_vacina['nome'])
-        for _ in range(qtd):
-            self.__vacinas.append(vacina)
+    def opcoes_vacina(self):
+        self.__tela_vacina.abre_tela_vacina()
     
-    def del_vacina(self, vacina: Vacina):
-        if isinstance(vacina, Vacina):
-            for i in self.__vacinas(qtd):
-                if vacina.nome_fabricante == i.nome_fabricante:
-                    self.__vacinas.remove(i.nome_fabricante)
+    def incluir_vacina(self, qtd):
+        info = self.__tela_vacina.info_vacina()
+        vacina = Vacina(info['nome'])
+        if vacina not in self.__vacinas:
+            for _ in range(qtd):
+                self.__vacinas.append(vacina)
     
-    def setter_vacina(self):
-        pass
+    def deletar_vacina(self):
+        info = self.__tela_vacina.info_vacina()
+        vacina = Vacina(info['nome'])
+        if vacina in self.__vacinas:
+            self.__vacinas.remove(vacina)
 
-    def get_vacinas(self):
+    def alterar_vacinas(self):
+        self.deletar_vacina()
+        self.incluir_vacina()
+
+    @property
+    def lista_vacina(self):
         return self.__vacinas
         

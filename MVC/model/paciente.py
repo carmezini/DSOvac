@@ -1,11 +1,11 @@
 from abstract_pessoa import Pessoa
 
 class Paciente(Pessoa):
-    def __init__(self, nome: str, endereco: str, ano_nascimento: int, cpf: int):
+    def __init__(self, nome: str, endereco: str, ano: int, cpf: int):
         super().__init__()
         self.__nome = nome
         self.__endereco = endereco
-        self.__ano_nascimento = ano_nascimento
+        self.__ano = ano
         self.__cpf = cpf
     
     @property
@@ -27,13 +27,13 @@ class Paciente(Pessoa):
             self.__endereco = endereco
     
     @property
-    def ano_nascimento(self):
-        return self.__ano_nascimento
+    def ano(self):
+        return self.__ano
     
     @ano_nascimento.setter
-    def ano_nascimento(self, ano_nascimento):
-        if isinstance(ano_nascimento, int):
-            self.__ano_nascimento = ano_nascimento
+    def ano_nascimento(self, ano):
+        if isinstance(ano, int):
+            self.__ano = ano
     
     @property
     def cpf(self):

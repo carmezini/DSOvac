@@ -4,19 +4,27 @@ from model.paciente import Paciente
 class ControlPaciente():
     def __init__(self):
         self.__pacientes = []
-        self.__tela_paciente = TelaPaciente()
-
-    def add_paciente(self):
-        paciente = Paciente(info['nome'], info['endereco'], info['ano'], info['cpf'])
-        self.__pacientes.append(paciente)
+        self.__tela_paciente = TelaPaciente(self)
     
-    def del_paciente(self):
+    def opcoes_paciente(self):
+        self.__tela_paciente.abre_tela_paciente()
+
+    def incluir_paciente(self):
+        info = self.__tela_paciente.info_paciente()
+        paciente = Paciente(info['nome'], info['endereco'], info['ano'], info['cpf'])
+        if paciente not in self.__pacientes:
+            self.__pacientes.append(paciente)
+
+    def deletar_paciente(self):
+        info = self.__tela_paciente.info_paciente()
         paciente = Paciente(info['nome'], info['endereco'], info['ano'], info['cpf'])
         if paciente in self.__pacientes:
             self.__pacientes.remove(paciente)
     
-    def altera_paciente(self, paciente: Paciente):
-        if paciente in self.__pacientes:
-            self.del_paciente
-            self.add_paciente
-        
+    def alterar_paciente(self):
+        self.deletar_paciente()
+        self.incluir_paciente()
+    
+    @property
+    def lista_pacientes(self):
+        return self.__pacientes
