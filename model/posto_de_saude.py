@@ -1,4 +1,4 @@
-from agendamento import Agendamento
+from model.agendamento import Agendamento
 
 class PostoDeSaude:
     def __init__(self, nome: str):
