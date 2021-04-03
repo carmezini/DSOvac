@@ -11,7 +11,7 @@ class TelaPaciente():
             3: 'Alterar info paciente',
             4: 'Listar pacientes'
         }
-        self.__menu = Menu('\033[36:41mOpções Paciente\033[m ===', opcoes_paciente)
+        self.__menu = Menu('\033[36:41mOpções Paciente\033[m ====', opcoes_paciente)
         self.__controlador = controlador
     
 

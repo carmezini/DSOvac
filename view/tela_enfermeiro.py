@@ -11,7 +11,7 @@ class TelaEnfermeiro():
             3: 'Alterar info enfermeiro',
             4: 'Listar enfermeiros'
         }
-        self.__menu = Menu('\033[36:41mOpções Enfermeiros\033[m ===', opcoes_enfermeiro)
+        self.__menu = Menu('\033[36:41mOpções Enfermeiros\033[m ====', opcoes_enfermeiro)
         self.__controlador = controlador
     
 

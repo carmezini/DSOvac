@@ -15,8 +15,8 @@ class TelaSistema():
             0: 'Sair',
             1: 'Criar posto'
         }
-        self.__menu_com_posto = Menu('\033[35:40mPosto de Saúde\033[m ===', opcoes_com_posto)
-        self.__menu_sem_posto = Menu('\033[32:40mMenu Principal\033[m ===', opcoes_sem_posto)
+        self.__menu_com_posto = Menu('\033[35:40mPosto de Saúde\033[m ====', opcoes_com_posto)
+        self.__menu_sem_posto = Menu('\033[32:40mMenu Principal\033[m ====', opcoes_sem_posto)
         self.__controlador = controlador
     
     def inicie(self):

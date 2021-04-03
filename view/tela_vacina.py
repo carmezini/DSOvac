@@ -11,7 +11,7 @@ class TelaVacina():
             3: 'Alterar info vacina',
             4: 'Listar Vacinas',
         }
-        self.__menu = Menu('\033[36:41mOpções Vacina\033[m', opcoes_vacina)
+        self.__menu = Menu('\033[36:41mOpções Vacina\033[m ====', opcoes_vacina)
         self.__controlador = controlador
     
     def abre_tela_vacina(self):
