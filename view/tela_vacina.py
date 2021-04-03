@@ -9,7 +9,7 @@ class TelaVacina():
             1: 'Cadastrar Vacina',
             2: 'Excluir Vacina',
             3: 'Alterar info vacina',
-            4: 'Listar Vacinas',
+            4: 'Listar Vacinas'
         }
         self.__menu = Menu('\033[36:41mOpções Vacina\033[m ====', opcoes_vacina)
         self.__controlador = controlador
@@ -29,7 +29,7 @@ class TelaVacina():
                 self.__controlador.alterar_vacinas()
             elif opcao == 4:
                 self.mostrar_vacinas()
-    
+
     def info_vacina(self):
         print('\033[32:40m= = = Adicionar Vacina = = =\033[m')
         nome_vacina = input('Qual o nome do fabricante? ')
@@ -47,4 +47,3 @@ class TelaVacina():
         for v in self.__controlador.lista_vacinas():
             print(v)
         print('*=*=*=*')
-        print('Just a test')

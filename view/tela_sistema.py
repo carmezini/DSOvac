@@ -42,7 +42,7 @@ class TelaSistema():
                 elif opcao == 3:
                     self.__controlador.opcoes_vacina()
                 elif opcao == 4:
-                    pass
+                    self.__controlador.opcoes_agendamento()
                 elif opcao == 5:
                     pass
         
@@ -50,17 +50,3 @@ class TelaSistema():
         nome_posto = input('Qual o nome do bairro que o posto abrange? ')
         nome_posto = 'Posto de Saúde ' + nome_posto
         return nome_posto
-    
-    def info_paciente(self):
-        nome_paciente = input('Qual o nome do paciente? ')
-        rua = input('Qual o nome da rua em que resida? ')
-        num_casa = int(input('Qual o número da residência? '))
-        ano = int(input('Qual o ano de nascimento? '))
-        cpf = input('Informe o CPF do paciente: ')
-        return {'nome': nome_paciente, 'rua': rua, 'num_casa': num_casa, 'ano': ano, 'cpf': cpf}
-    
-    def info_deletar_paciente(self):
-        cpf = int(input('Qual o CPF do paciente que deseja excluir? '))
-
-    def info_enfermeiro(self):
-        pass
