@@ -9,7 +9,7 @@ class Agendamento:
         self.__paciente = paciente
         self.__enfermeiro = enfermeiro
         self.__vacina = vacina
-    
+
     @property
     def data(self):
         return self.__data

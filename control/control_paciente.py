@@ -23,8 +23,13 @@ class ControlPaciente():
 
     def incluir_paciente(self):
         info = self.__tela_paciente.info_paciente()
-        paciente = Paciente(info['nome'], info['rua'], info['num_casa'], info['ano'], info['cpf'])
-        self.__pacientes.append(paciente)
+        tem_paciente = False
+        for paciente in self.__pacientes:
+            if info['cpf'] == paciente.cpf:
+                tem_paciente = True
+        if tem_paciente is False:
+            paciente = Paciente(info['nome'], info['rua'], info['num_casa'], info['ano'], info['cpf'])
+            self.__pacientes.append(paciente)
 
     def deletar_paciente(self):
         info = self.__tela_paciente.info_deletar_paciente()
@@ -35,6 +40,9 @@ class ControlPaciente():
     def alterar_paciente(self):
         self.deletar_paciente()
         self.incluir_paciente()
+
+    def num_pacientes(self):
+        return len(self.__pacientes)
 
     def lista_pacientes(self):
         return self.__pacientes

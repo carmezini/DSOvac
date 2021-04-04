@@ -28,5 +28,13 @@ class ControlVacina():
         self.deletar_vacina()
         self.incluir_vacina()
 
+    def qtd_vacinas(self):
+        qtd = 0
+        soma = 0
+        for vacina in self.__vacinas:
+            qtd = vacina.quantidade
+            soma = soma + qtd
+        return soma
+
     def lista_vacinas(self):
         return self.__vacinas

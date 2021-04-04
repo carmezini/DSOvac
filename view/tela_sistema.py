@@ -44,9 +44,7 @@ class TelaSistema():
                 elif opcao == 4:
                     self.__controlador.opcoes_agendamento()
                 elif opcao == 5:
-                    pass
-        
-    def info_posto(self):
-        nome_posto = input('Qual o nome do bairro que o posto abrange? ')
-        nome_posto = 'Posto de Saúde ' + nome_posto
-        return nome_posto
+                    self.mostra_posto()
+    
+    def mostra_posto(self):
+        self.__controlador.relatorio_geral()

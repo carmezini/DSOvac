@@ -10,6 +10,7 @@ class ControlAgendamento():
                              '15/04/2021', '16/04/2021', '17/04/2021', '18/04/2021', '19/04/2021']
         self.__lista_hora = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00',
                              '17:00', '18:00']
+        
     
     def opcoes_agendamento(self):
         self.__tela_agendamento.abre_tela_agendamento()

@@ -30,5 +30,8 @@ class ControlEnfermeiro():
         self.deletar_enfermeiro()
         self.incluir_enfermeiro()
 
+    def num_enfermeiros(self):
+        return len(self.__enfermeiros)
+
     def lista_enfermeiros(self):
         return self.__enfermeiros

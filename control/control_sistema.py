@@ -18,11 +18,11 @@ class ControlSistema():
         self.__tela_sistema.inicie()
     
     def cria_posto(self):
-        posto = self.__tela_sistema.info_posto()
+        nome_posto = self.__controlador_posto_de_saude.nome()
         self.__controlador_paciente.incluir_paciente_padrao()
         self.__controlador_enfermeiro.incluir_enfermeiro_padrao()
         self.__controlador_vacina.incluir_vacina_padrao()
-        self.__controlador_posto_de_saude.armazena_posto(posto)
+        self.__controlador_posto_de_saude.armazena_posto(nome_posto)
     
     def opcoes_paciente(self):
         self.__controlador_paciente.opcoes_paciente()
@@ -47,6 +47,16 @@ class ControlSistema():
         lista_paciente = self.__controlador_paciente.lista_pacientes()
         return lista_paciente
     
+    def relatorio_geral(self):
+        nome_posto = self.__controlador_posto_de_saude.nome()
+        num_pacientes = self.__controlador_paciente.num_pacientes()
+        num_enfermeiros = self.__controlador_enfermeiro.num_enfermeiros()
+        qtd_vacinas = self.__controlador_vacina.qtd_vacinas()
+        vacinados_1_dose = self.__controlador_agendamento.vacinados_primeira_dose()
+        vacinados_2_dose = self.__controlador_agendamento.vacinados_segunda_dose()
+        return {'nome': nome_posto, 'num_pacientes': num_pacientes, 'num_enfermeiros': num_enfermeiros,
+                'qtd_vacinas': qtd_vacinas, 'uma_dose': vacinados_1_dose, 'duas doses': vacinados_2_dose}
+
     def control_enfermeiro(self):
         return self.__controlador_enfermeiro.lista_enfermeiros()
     
