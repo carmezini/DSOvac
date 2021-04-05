@@ -17,3 +17,6 @@ class PostoDeSaude:
     @property
     def agendamentos(self):
         return self.__agendamentos
+    
+    def __str__(self):
+        return 'Posto de Saúde {}'.format(self.__nome)

@@ -4,6 +4,7 @@ from control.control_enfermeiro import ControlEnfermeiro
 from control.control_paciente import ControlPaciente
 from control.control_vacina import ControlVacina
 from control.control_posto_de_saude import ControlPostoDeSaude
+import random as rd
 
 class ControlSistema():
     def __init__(self):
@@ -38,30 +39,34 @@ class ControlSistema():
     
     def relaciona_agendamento(self):
         lista_enfermeiro = self.__controlador_enfermeiro.lista_enfermeiros()
+        rd.shuffle(lista_enfermeiro)
         enfermeiro = lista_enfermeiro[0]
         lista_vacina = self.__controlador_vacina.lista_vacinas()
+        rd.shuffle(lista_vacina)
         vacina = lista_vacina[0]
-        return {'enfermeiro': enfermeiro, 'vacina': vacina}
+        return {'enfermeiro': enfermeiro,
+                'vacina': vacina}
     
     def retorna_lista_paciente(self):
         lista_paciente = self.__controlador_paciente.lista_pacientes()
         return lista_paciente
     
     def relatorio_geral(self):
-        nome_posto = self.__controlador_posto_de_saude.nome()
+        nome_posto = self.__controlador_posto_de_saude.exibir_posto()
         num_pacientes = self.__controlador_paciente.num_pacientes()
         num_enfermeiros = self.__controlador_enfermeiro.num_enfermeiros()
         qtd_vacinas = self.__controlador_vacina.qtd_vacinas()
-        vacinados_1_dose = self.__controlador_agendamento.vacinados_primeira_dose()
-        vacinados_2_dose = self.__controlador_agendamento.vacinados_segunda_dose()
-        return {'nome': nome_posto, 'num_pacientes': num_pacientes, 'num_enfermeiros': num_enfermeiros,
-                'qtd_vacinas': qtd_vacinas, 'uma_dose': vacinados_1_dose, 'duas doses': vacinados_2_dose}
+        vacinados_primeira_dose = self.__controlador_agendamento.num_vacinados_primeira_dose()
+        vacinados_segunda_dose = self.__controlador_agendamento.num_vacinados_segunda_dose()
+        return {'nome': nome_posto,
+                'num_pacientes': num_pacientes,
+                'num_enfermeiros': num_enfermeiros,
+                'qtd_vacinas': qtd_vacinas,
+                'uma_dose': vacinados_primeira_dose,
+                'duas_doses': vacinados_segunda_dose}
 
     def control_enfermeiro(self):
         return self.__controlador_enfermeiro.lista_enfermeiros()
     
     def control_vacina(self):
         return self.__controlador_vacina.lista_vacinas()
-    
-    def finaliza_sistema(self):
-        exit()

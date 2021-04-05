@@ -20,6 +20,9 @@ class Vacina:
     def nome_fabricante(self, nome_fabricante):
         if isinstance(nome_fabricante, str):
             self.__nome_fabricante = nome_fabricante
+    
+    def usa_dose(self):
+        self.__quantidade -= 1
 
     def __str__(self):
         return 'Nome: {}  Quantidade: {}'.format(self.__nome_fabricante, self.__quantidade)

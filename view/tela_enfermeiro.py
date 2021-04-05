@@ -14,7 +14,6 @@ class TelaEnfermeiro():
         self.__menu = Menu('\033[36:41mOpções Enfermeiros\033[m ====', opcoes_enfermeiro)
         self.__controlador = controlador
     
-
     def abre_tela_enfermeiro(self):
         terminar = False
         while not terminar:
@@ -33,16 +32,61 @@ class TelaEnfermeiro():
 
     def info_enfermeiro(self):
         print('\033[32:40m= = = Adicionar Enfermeiro = = =\033[m')
-        nome_enfermeiro = input('Qual o nome do enfermeiro? ')
+        nome_enfermeiro = self.nome_enfermeiro()
         rua = input('Qual a rua onde resida? ')
-        num_casa = int(input('Qual o número da residência? '))
-        matricula = input('Digite sua matrícula (apenas números): ')
+        num_casa = self.num_casa_enfermeiro()
+        matricula = self.matricula_enfermeiro()
         print('*=*=*=*')
         return {'nome': nome_enfermeiro, 'rua': rua, 'num_casa': num_casa, 'matricula': matricula}
+    
+    def nome_enfermeiro(self):
+        leu = False
+        while not leu:
+            nome_enfermeiro = input('Qual o nome do enfermeiro? ')
+            nome_enfermeiro = nome_enfermeiro.title()
+            novo = nome_enfermeiro.replace(' ', 'x')
+            if novo.isalpha():
+                leu = True
+            if leu is False:
+                print('Um nome deve conter apenas letras.')
+        return nome_enfermeiro
+
+    def rua_enfermeiro(self):
+        leu = False
+        while not leu:
+            rua_enfermeiro = input('Qual o nome da rua onde resida? ')
+            rua_enfermeiro = rua_enfermeiro.title()
+            novo = rua_enfermeiro.replace(' ', 'x')
+            if novo.isalpha():
+                leu = True
+            if leu is False:
+                print('Um nome deve conter apenas letras.')
+        return rua_enfermeiro
+
+    def num_casa_enfermeiro(self):
+        leu = False
+        while not leu:
+            try:
+                num_casa = int(input('Qual o número da residência? '))
+                leu = True
+            except ValueError:
+                print('Digite apenas números.')
+        return num_casa
+
+    def matricula_enfermeiro(self):
+        leu = False
+        while not leu:
+            matricula = input('Digite sua matrícula (6 números): ')
+            if matricula.isnumeric():
+                if len(matricula) == 6:
+                    leu = True
+            if leu is False:
+                print('Matrícula é definida por 6 dígitos númericos.')
+        return matricula
 
     def info_deletar_enfermeiro(self):
         print('\033[35:40m= = = Excluir Enfermeiro = = =\033[m')
-        matricula = input('Qual a matrícula do enfermeiro? ')
+        matricula = self.matricula_enfermeiro()
         return {'matricula': matricula}
 
     def mostrar_enfermeiros(self):

@@ -10,18 +10,20 @@ class ControlVacina():
         self.__tela_vacina.abre_tela_vacina()
 
     def incluir_vacina_padrao(self):
-        vacina1 = Vacina('DSOVAC', 10)
+        vacina1 = Vacina('DSOVAC', 100)
+        vacina2 = Vacina('ButanVAC', 50)
         self.__vacinas.append(vacina1)
+        self.__vacinas.append(vacina2)
 
     def incluir_vacina(self):
         info = self.__tela_vacina.info_vacina()
         vacina = Vacina(info['nome'], info['qtd']) 
-        self.__vacinas.append(vacina)       
+        self.__vacinas.append(vacina)
 
     def deletar_vacina(self):
         info = self.__tela_vacina.info_deletar_vacina()
         for vacina in self.__vacinas:
-            if vacina.nome == info['nome']:
+            if vacina.nome_fabricante == info['nome']:
                 self.__vacinas.remove(vacina)
 
     def alterar_vacinas(self):
@@ -35,6 +37,9 @@ class ControlVacina():
             qtd = vacina.quantidade
             soma = soma + qtd
         return soma
+    
+    def usa_dose(self):
+        vacina.quantidade -= 1
 
     def lista_vacinas(self):
         return self.__vacinas

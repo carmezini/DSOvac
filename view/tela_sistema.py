@@ -44,7 +44,13 @@ class TelaSistema():
                 elif opcao == 4:
                     self.__controlador.opcoes_agendamento()
                 elif opcao == 5:
-                    self.mostra_posto()
+                    self.exibir_relatorio_geral()
     
-    def mostra_posto(self):
-        self.__controlador.relatorio_geral()
+    def exibir_relatorio_geral(self):
+        dic = self.__controlador.relatorio_geral()
+        print(dic['nome'])
+        print('Número pacientes: ', dic['num_pacientes'])
+        print('número enfermeiros: ', dic['num_enfermeiros'])
+        print('Número vacinas: ', dic['qtd_vacinas'])
+        print('Número de vacinados em primeira dose: ', dic['uma_dose'])
+        print('Número de vacinados em segunda dose: ', dic['duas_doses'])

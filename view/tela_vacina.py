@@ -33,9 +33,19 @@ class TelaVacina():
     def info_vacina(self):
         print('\033[32:40m= = = Adicionar Vacina = = =\033[m')
         nome_vacina = input('Qual o nome do fabricante? ')
-        qtd = int(input('Quantas doses deseja informar? '))
+        qtd = self.quantidade_vacina()
         print('*=*=*=*')
         return {'nome': nome_vacina, 'qtd': qtd}
+
+    def quantidade_vacina(self):
+        leu = False
+        while not leu:
+            try:
+                qtd = int(input('Quantas doses deseja informar? '))
+                leu = True
+            except ValueError:
+                print('Digite apenas números inteiros.')
+        return qtd
 
     def info_deletar_vacina(self):
         print('\033[35:40m= = = Excluir Vacina = = =\033[m')
