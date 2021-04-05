@@ -20,7 +20,10 @@ class TelaAgendamento():
             if opcao == 0:
                 terminar = True
             elif opcao == 1:
-                self.__controlador.incluir_agendamento()
+                try:
+                    self.__controlador.incluir_agendamento()
+                except Exception():
+                    print('Paciente ainda não cadastrado.')
             elif opcao == 2:
                 self.__controlador.deletar_agendamento()
             elif opcao == 3:

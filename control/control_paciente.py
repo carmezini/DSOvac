@@ -11,10 +11,10 @@ class ControlPaciente():
 
     def incluir_paciente_padrao(self):
         paciente1 = Paciente('Artur Carmezini', 'Felipe Neves', 268, 1999, '07429362958')
-        paciente2 = Paciente('James Harden', 'AV. Santa Catarina', 13, 1991, '3123341243')
-        paciente3 = Paciente('LeBron James', 'Los Angeles', 23, 1990, '3214382989')
-        paciente4 = Paciente('Stephen Curry', 'Av. Oakland', 30, 1990, '321370905')
-        paciente5 = Paciente('Damian Lillard', 'st. Oregon', 30, 1993, '3910482309')
+        paciente2 = Paciente('James Harden', 'AV. Santa Catarina', 13, 1991, '31233412436')
+        paciente3 = Paciente('LeBron James', 'Los Angeles', 23, 1990, '32143829896')
+        paciente4 = Paciente('Stephen Curry', 'Av. Oakland', 30, 1990, '32137090545')
+        paciente5 = Paciente('Damian Lillard', 'st. Oregon', 30, 1993, '09104823098')
         self.__pacientes.append(paciente2)
         self.__pacientes.append(paciente1)
         self.__pacientes.append(paciente3)
