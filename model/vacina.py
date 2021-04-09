@@ -25,4 +25,4 @@ class Vacina:
         self.__quantidade -= 1
 
     def __str__(self):
-        return 'Nome: {} '.format(self.__nome_fabricante)
+        return 'Nome: {}      Quantidade: {}'.format(self.__nome_fabricante, self.__quantidade)

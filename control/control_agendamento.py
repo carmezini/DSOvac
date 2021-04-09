@@ -24,6 +24,8 @@ class ControlAgendamento():
             if dict_cpf_paciente['cpf_paciente'] == paciente.cpf:
                 tem_paciente = True
                 break
+        if tem_paciente is False:
+            raise Exception
         for agendamento in self.__agendamentos:
             if data == agendamento.data:
                 if hora == agendamento.hora:
