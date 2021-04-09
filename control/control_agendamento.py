@@ -20,15 +20,10 @@ class ControlAgendamento():
         hora = self.__tela_agendamento.info_hora()
         tem_paciente = False
         ja_tem_hora_data = False
-        try:
-            for paciente in lista_pacientes:
-                if dict_cpf_paciente['cpf_paciente'] == paciente.cpf:
-                    tem_paciente = True
-                    break
-                else:
-                    raise Exception
-        except Exception:
-            return ''
+        for paciente in lista_pacientes:
+            if dict_cpf_paciente['cpf_paciente'] == paciente.cpf:
+                tem_paciente = True
+                break
         for agendamento in self.__agendamentos:
             if data == agendamento.data:
                 if hora == agendamento.hora:
