@@ -36,10 +36,22 @@ class ControlPaciente():
         for paciente in self.__pacientes:
             if paciente.cpf == info['cpf']:
                 self.__pacientes.remove(paciente)
+                break
+            else:
+                raise Exception()
 
     def alterar_paciente(self):
-        self.deletar_paciente()
-        self.incluir_paciente()
+        cpf = self.__tela_paciente.alterar_paciente()
+        for paciente in self.__pacientes:
+            if cpf['cpf'] == paciente.cpf:
+                info = self.__tela_paciente.info_alterar_paciente()
+                paciente.nome = info['nome']
+                paciente.rua = info['rua']
+                paciente.num_casa = info['num_casa']
+                paciente.ano = info['ano']
+                paciente.cpf = info['cpf']
+            else:
+                raise Exception()
 
     def num_pacientes(self):
         return len(self.__pacientes)
