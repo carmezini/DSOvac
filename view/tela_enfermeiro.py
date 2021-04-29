@@ -22,7 +22,12 @@ class TelaEnfermeiro():
             if opcao == 0:
                 terminar = True
             elif opcao == 1:
-                self.__controlador.incluir_enfermeiro()
+                try:
+                    self.__controlador.incluir_enfermeiro()
+                except Exception:
+                    print('Não foi possível adicionar enfermeiro.')
+                else:
+                    print('Enfermeiro adicionado com sucesso.')
             elif opcao == 2:
                 try:
                     self.__controlador.deletar_enfermeiro()
@@ -44,7 +49,7 @@ class TelaEnfermeiro():
         matricula = self.matricula_enfermeiro()
         print('*=*=*=*')
         return {'nome': nome_enfermeiro, 'rua': rua, 'num_casa': num_casa, 'matricula': matricula}
-    
+
     def alterar_enfermeiro(self):
         matricula = self.matricula_enfermeiro()
         return {'matricula': matricula}

@@ -24,18 +24,22 @@ class ControlEnfermeiro():
         if tem_enfermeiro is False:
             enfermeiro = Enfermeiro(info['nome'], info['rua'], info['num_casa'], info['matricula'])
             self.__enfermeiros.append(enfermeiro)
+        else:
+            raise Exception()
 
     def deletar_enfermeiro(self):
         info = self.__tela_enfermeiro.info_deletar_enfermeiro()
+        tem_enfermeiro = False
         for enfermeiro in self.__enfermeiros:
             if enfermeiro.matricula == info['matricula']:
                 self.__enfermeiros.remove(enfermeiro)
                 break
-            else:
-                raise Exception()
+        if tem_enfermeiro is False:
+            raise Exception()
 
     def alterar_enfermeiro(self):
         matricula = self.__tela_enfermeiro.alterar_enfermeiro()
+        tem_enfermeiro = False
         for enfermeiro in self.__enfermeiros:
             if enfermeiro.matricula == matricula['matricula']:
                 info = self.__tela_enfermeiro.info_alterar_enfermeiro()
@@ -43,8 +47,10 @@ class ControlEnfermeiro():
                 enfermeiro.rua = info['rua']
                 enfermeiro.num_casa = info['num_casa']
                 enfermeiro.matricula = info['matricula']
-            else:
-                raise Exception()
+                tem_enfermeiro = True
+                break
+        if tem_enfermeiro is False:
+            raise Exception()
 
     def num_enfermeiros(self):
         return len(self.__enfermeiros)

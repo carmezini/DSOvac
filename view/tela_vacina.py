@@ -22,20 +22,61 @@ class TelaVacina():
             if opcao == 0:
                 terminar = True
             elif opcao == 1:
-                self.__controlador.incluir_vacina()
+                try:
+                    self.__controlador.incluir_vacina()
+                except Exception:
+                    print('Não foi possível adicionar a vacina.')
+                else:
+                    print('Vacina adicionada com sucesso.')
             elif opcao == 2:
-                self.__controlador.deletar_vacina()
+                try:
+                    self.__controlador.deletar_vacina()
+                except Exception:
+                    print('A vacina informada não consta no estoque.')
+                else:
+                    print('Vacina deletada com sucesso.')
             elif opcao == 3:
-                self.__controlador.alterar_vacinas()
+                try:
+                    self.__controlador.alterar_vacinas()
+                except Exception:
+                    print('A vacina informada não consta no estoque.')
+                else:
+                    print('Vacina alterada com sucesso.')
             elif opcao == 4:
                 self.mostrar_vacinas()
 
     def info_vacina(self):
         print('\033[32:40m= = = Adicionar Vacina = = =\033[m')
-        nome_vacina = input('Qual o nome do fabricante? ')
+        nome = self.nome_vacina()
         qtd = self.quantidade_vacina()
         print('*=*=*=*')
-        return {'nome': nome_vacina, 'qtd': qtd}
+        return {'nome': nome, 'qtd': qtd}
+
+    def alterar_vacina(self):
+        nome = self.nome_vacina()
+        return {'nome': nome}
+
+    def info_alterar_vacina(self):
+        print('\033[32:41m= = = Alterar Vacina = = =\033[m')
+        print('Adicione as novas informações da vacina...')
+        nome = self.nome_vacina()
+        qtd = self.quantidade_vacina()
+        return {'nome': nome, 'qtd': qtd}
+    
+    def info_deletar_vacina(self):
+        print('\033[35:40m= = = Excluir Vacina = = =\033[m')
+        nome = input('Qual o nome do fabricante? ')
+        return {'nome': nome}
+    
+    def mostrar_vacinas(self):
+        print('\033[34:40m= = = Vacinas Cadastradas = = =\033[m')
+        for v in self.__controlador.lista_vacinas():
+            print(v)
+        print('*=*=*=*')
+
+    def nome_vacina(self):
+        nome = input('Digite o nome do fabricante? ')
+        return nome
 
     def quantidade_vacina(self):
         leu = False
@@ -46,14 +87,3 @@ class TelaVacina():
             except ValueError:
                 print('Digite apenas números inteiros.')
         return qtd
-
-    def info_deletar_vacina(self):
-        print('\033[35:40m= = = Excluir Vacina = = =\033[m')
-        nome_vacina = input('Qual o nome do fabricante? ')
-        return {'nome': nome_vacina}
-    
-    def mostrar_vacinas(self):
-        print('\033[34:40m= = = Vacinas Cadastradas = = =\033[m')
-        for v in self.__controlador.lista_vacinas():
-            print(v)
-        print('*=*=*=*')
