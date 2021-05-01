@@ -22,7 +22,7 @@ class ControlPaciente():
         self.__pacientes.append(paciente5)
 
     def incluir_paciente(self):
-        info = self.__tela_paciente.info_paciente()
+        info = self.__tela_paciente.incluir_paciente()
         tem_paciente = False
         for paciente in self.__pacientes:
             if info['cpf'] == paciente.cpf:
@@ -30,6 +30,8 @@ class ControlPaciente():
         if tem_paciente is False:
             paciente = Paciente(info['nome'], info['rua'], info['num_casa'], info['ano'], info['cpf'])
             self.__pacientes.append(paciente)
+        else:
+            raise Exception()
 
     def deletar_paciente(self):
         info = self.__tela_paciente.info_deletar_paciente()

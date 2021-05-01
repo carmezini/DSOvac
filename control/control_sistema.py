@@ -8,6 +8,7 @@ import random as rd
 
 class ControlSistema():
     def __init__(self):
+        self.__instance = None
         self.__controlador_agendamento = ControlAgendamento(self)
         self.__controlador_enfermeiro = ControlEnfermeiro()
         self.__controlador_paciente = ControlPaciente()
@@ -16,15 +17,12 @@ class ControlSistema():
         self.__tela_sistema = TelaSistema(self)
 
     def inicia_sistema(self):
-        self.__tela_sistema.inicie()
-    
-    def cria_posto(self):
-        nome_posto = self.__controlador_posto_de_saude.nome()
         self.__controlador_paciente.incluir_paciente_padrao()
         self.__controlador_enfermeiro.incluir_enfermeiro_padrao()
         self.__controlador_vacina.incluir_vacina_padrao()
-        self.__controlador_posto_de_saude.armazena_posto(nome_posto)
-    
+        self.__tela_sistema.inicie()
+
+
     def opcoes_paciente(self):
         self.__controlador_paciente.opcoes_paciente()
     
@@ -37,15 +35,17 @@ class ControlSistema():
     def opcoes_agendamento(self):
         self.__controlador_agendamento.opcoes_agendamento()
     
-    def relaciona_agendamento(self):
+    def obtem_enfermeiro(self):
         lista_enfermeiro = self.__controlador_enfermeiro.lista_enfermeiros()
         rd.shuffle(lista_enfermeiro)
         enfermeiro = lista_enfermeiro[0]
+        return {'enfermeiro': enfermeiro}
+    
+    def obtem_vacina(self):
         lista_vacina = self.__controlador_vacina.lista_vacinas()
         rd.shuffle(lista_vacina)
         vacina = lista_vacina[0]
-        return {'enfermeiro': enfermeiro,
-                'vacina': vacina}
+        return {'vacina': vacina}
     
     def retorna_lista_paciente(self):
         lista_paciente = self.__controlador_paciente.lista_pacientes()

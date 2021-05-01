@@ -1,50 +1,29 @@
 from view.menu import Menu
+import PySimpleGUI as sg
 
 class TelaSistema():
     def __init__(self, controlador):
-        self.__posto = None
-        opcoes_com_posto = {
-            0: 'Destruir posto',
-            1: 'Opções paciente',
-            2: 'Opções enfermeiro',
-            3: 'Opções vacina',
-            4: 'Opções agendamento',
-            5: 'Relatório geral do posto'
-        }
-        opcoes_sem_posto = {
-            0: 'Sair',
-            1: 'Criar posto'
-        }
-        self.__menu_com_posto = Menu('\033[35:40mPosto de Saúde\033[m ====', opcoes_com_posto)
-        self.__menu_sem_posto = Menu('\033[32:40mMenu Principal\033[m ====', opcoes_sem_posto)
+        self.init_components()
+        self.__window = None
         self.__controlador = controlador
-    
+
     def inicie(self):
-        terminar = False
-        while not terminar:
-            if self.__posto is None:
-                menu = self.__menu_sem_posto
-                opcao = menu.pergunte()
-                if opcao == 0:
-                    terminar = True
-                elif opcao == 1:
-                    posto = self.__controlador.cria_posto()
-                    self.__posto = True
-            else:
-                menu = self.__menu_com_posto
-                opcao = menu.pergunte()
-                if opcao == 0:
-                    terminar = True
-                elif opcao == 1:
-                    self.__controlador.opcoes_paciente()
-                elif opcao == 2:
-                    self.__controlador.opcoes_enfermeiro()
-                elif opcao == 3:
-                    self.__controlador.opcoes_vacina()
-                elif opcao == 4:
-                    self.__controlador.opcoes_agendamento()
-                elif opcao == 5:
-                    self.exibir_relatorio_geral()
+        self.init_components()
+        button, values = self.__window.Read()
+        opcao = 0
+        if values['0'] or button in (None, 'Cancelar'):
+            self.close()
+        elif values['1']:
+            self.__controlador.opcoes_paciente()
+        elif values['2']:
+            self.__controlador.opcoes_enfermeiro()
+        elif values['3']:
+            self.__controlador.opcoes_vacina()
+        elif values['4']:
+            self.__controlador.opcoes_agendamento()
+        elif values['5']:
+            self.exibir_relatorio_geral()
+        self.close()
     
     def exibir_relatorio_geral(self):
         dic = self.__controlador.relatorio_geral()
@@ -54,3 +33,21 @@ class TelaSistema():
         print('Número vacinas: ', dic['qtd_vacinas'])
         print('Número de vacinados em primeira dose: ', dic['uma_dose'])
         print('Número de vacinados em segunda dose: ', dic['duas_doses'])
+    
+    def close(self):
+        self.__window.close()
+    
+    def init_components(self):
+        sg.change_look_and_feel('DarkTeal4')
+        layout = [
+            [sg.Text('Posto de vacinação', font=('Helvica', 20))],
+            [sg.Text('Escolha sua opção', font=('Helvica', 15))],
+            [sg.Radio('Destruir posto',"RD1", key='0')],
+            [sg.Radio('Opções paciente',"RD1", key='1')],
+            [sg.Radio('Opções enfermeiro',"RD1", key='2')],
+            [sg.Radio('Opções vacina',"RD1", key='3')],
+            [sg.Radio('Opções agendamento',"RD1", key='4')],
+            [sg.Radio('Relatório geral do posto',"RD1", key='5')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Posto de Saúde').Layout(layout)
