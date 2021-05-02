@@ -20,8 +20,24 @@ class ControlSistema():
         self.__controlador_paciente.incluir_paciente_padrao()
         self.__controlador_enfermeiro.incluir_enfermeiro_padrao()
         self.__controlador_vacina.incluir_vacina_padrao()
-        self.__tela_sistema.inicie()
+        self.abre_tela()
+    
+    def abre_tela(self):
+        opcoes = {1: self.opcoes_paciente,
+                  2: self.opcoes_enfermeiro,
+                  3: self.opcoes_vacina,
+                  4: self.opcoes_agendamento,
+                  5: self.relatorio_geral,
+                  0: self.encerra_sistema
+                 }
+        while True:
+            opcao = self.__tela_sistema.opcoes_tela()
+            funcao = opcoes[opcao]
+            funcao()              
 
+    
+    def encerra_sistema(self):
+        exit(0)
 
     def opcoes_paciente(self):
         self.__controlador_paciente.opcoes_paciente()

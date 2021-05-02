@@ -34,11 +34,12 @@ class ControlPaciente():
             raise Exception()
 
     def deletar_paciente(self):
-        info = self.__tela_paciente.info_deletar_paciente()
+        info = self.__tela_paciente.deletar_paciente()
         tem_paciente = False
         for paciente in self.__pacientes:
             if paciente.cpf == info['cpf']:
                 self.__pacientes.remove(paciente)
+                tem_paciente = True
                 break
         if tem_paciente is False:
             raise Exception()
@@ -48,7 +49,7 @@ class ControlPaciente():
         tem_paciente = False
         for paciente in self.__pacientes:
             if cpf['cpf'] == paciente.cpf:
-                info = self.__tela_paciente.info_alterar_paciente()
+                info = self.__tela_paciente.info_setter_paciente()
                 paciente.nome = info['nome']
                 paciente.rua = info['rua']
                 paciente.num_casa = info['num_casa']
@@ -63,4 +64,7 @@ class ControlPaciente():
         return len(self.__pacientes)
 
     def lista_pacientes(self):
-        return self.__pacientes
+        pacientes = []
+        for paciente in self.__pacientes:
+            pacientes.append({'nome': paciente.nome, 'cpf': paciente.cpf})
+        self.__tela_paciente.mostrar_pacientes(pacientes)
