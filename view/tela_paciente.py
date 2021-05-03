@@ -7,39 +7,27 @@ class TelaPaciente():
     def __init__(self, controlador):
         self.__window = None
         self.__controlador = controlador
-        self.init_opcoes()
 
-    def abre_tela_paciente(self):
-        terminar = False
-        while not terminar:
-            self.init_opcoes()
-            button, values = self.__window.Read()
-            if values['0'] or button in (None, 'Cancelar'):
-                self.close()
-            if values['1']:
-                try:
-                    self.__controlador.incluir_paciente()
-                except Exception:
-                    sg.Popup('Já há um paciente com esse CPF cadastrado.')
-                else:
-                    sg.Popup('Paciente cadastrado com sucesso.')
-            if values['2']:
-                try:
-                    self.__controlador.deletar_paciente()
-                except Exception:
-                    sg.PopupError('Ainda não há um paciente com esse CPF cadastrado.')
-                else:
-                    sg.Popup('Paciente excluido com sucesso.')
-            if values['3']:
-                try:
-                    self.__controlador.alterar_paciente()
-                except Exception:
-                    sg.Popup('Ainda não há um paciente com esse CPF cadastrado.')
-                else:
-                    sg.Popup('Paciente alterado com sucesso.')
-            if values['4']:
-                self.__controlador.lista_pacientes()
-            self.close()
+    def opcoes_tela_paciente(self):
+        self.window_paciente()
+        button, event, values = sg.read_all_windows()
+        opcao = 0
+        if event == 'Voltar':
+            opcao = 6
+        elif event == sg.WIN_CLOSED:
+            opcao = 0
+        elif values['1']:
+            opcao = 1
+        elif values['2']:
+            opcao = 2
+        elif values['3']:
+            opcao = 3
+        elif values['4']:
+            opcao = 4
+        elif values['5']:
+            opcao = 5
+        self.close()
+        return opcao
 
     def close(self):
         self.__window.Close()
@@ -55,7 +43,8 @@ class TelaPaciente():
                 if leu is False:
                     raise Exception
             except Exception:
-                sg.Popup('Um nome deve conter apenas letras.')
+                sg.PopupOK('Um nome deve conter apenas letras.')
+                nome = sg.popup_get_text('Digite o nome novamente: ')
         return nome
 
     def rua_paciente(self, rua):
@@ -69,7 +58,8 @@ class TelaPaciente():
                 if leu is False:
                     raise Exception()
             except Exception:
-               sg.Popup('Um nome deve conter apenas letras.')
+               sg.PopupOK('Um nome deve conter apenas letras.')
+               rua = sg.popup_get_text('Digite o nome da rua novamente: ')
         return rua
 
     def num_casa_paciente(self, num_casa):
@@ -79,7 +69,8 @@ class TelaPaciente():
                 if not num_casa.isnumeric():
                     raise ValueError
             except ValueError:
-                sg.Popup('Digite apenas números.')
+                sg.PopupOK('Digite apenas números.')
+                num_casa = sg.popup_get_text('Digite o número da casa novamente: ')
             else:
                 leu = True
         return num_casa
@@ -107,12 +98,13 @@ class TelaPaciente():
                 if 2021 > ano < 1871:
                     raise Exception
             except Exception:
-                Sg.Popup('O ano deve ser um número entre 1871 e 2021.')
+                sg.Popup('O ano deve ser um número entre 1871 e 2021.')
+                ano = sg.popup_get_text('Digite o ano novamente: ')
             else:
                 leu = True     
         return ano  
 
-    def init_opcoes(self):
+    def window_paciente(self):
         sg.theme('Reddit')
         layout = [
             [sg.Text('= = = Opções Paciente = = =', font=("Helvica", 25))],
@@ -121,27 +113,33 @@ class TelaPaciente():
             [sg.Radio('Excluir paciente', "RD1", key='2')],
             [sg.Radio('Alterar info paciente', "RD1", key='3')],
             [sg.Radio('Listar pacientes', "RD1", key='4')],
-            [sg.Radio('Retornar', "RD1", key='0')],
-            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
         ]
-        self.__window = sg.Window('Posto de Saúde').Layout(layout)
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
 
     def incluir_paciente(self):
         self.info_add_paciente()
+        button, event, values = sg.read_all_windows()
         leu = False
         while not leu:
-            button, values = self.__window.Read()
-            nome = values['nome']
-            self.nome(nome)
-            rua = values['rua']
-            self.rua_paciente(rua)
-            num_casa = values['num_casa']
-            self.num_casa_paciente(num_casa)
-            ano = values['ano']
-            self.ano_paciente(ano)
-            cpf = values['cpf']
-            self.cpf_paciente(cpf)
-            leu = True
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_paciente()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                nome = values['nome']
+                self.nome(nome)
+                rua = values['rua']
+                self.rua_paciente(rua)
+                num_casa = values['num_casa']
+                self.num_casa_paciente(num_casa)
+                ano = values['ano']
+                self.ano_paciente(ano)
+                cpf = values['cpf']
+                self.cpf_paciente(cpf)
+                leu = True
+                self.close()
         if leu is True:
             return {'nome': nome, 'rua': rua, 'num_casa': num_casa, 'ano': ano, 'cpf': cpf}
 
@@ -154,26 +152,37 @@ class TelaPaciente():
             [sg.Text('Nº casa:', size=(20,1)), sg.InputText('', key='num_casa')],
             [sg.Text('Ano Nacimento:', size=(20,1)), sg.InputText('', key='ano')],
             [sg.Text('CPF (Apenas Números):', size=(20,1)), sg.InputText('', key='cpf')],
-            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
         ]
-        self.__window = sg.Window('Posto de Saúde').Layout(layout)
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
     
     def deletar_paciente(self):
         self.info_del_paciente()
-        button, values = self.__window.Read()
-        cpf = values['cpf']
-        self.cpf_paciente(cpf)
-        return {'cpf': cpf}
-    
+        button, event, values = sg.read_all_windows()
+        leu = False
+        while not leu:
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_paciente()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                cpf = values['cpf']
+                self.cpf_paciente(cpf)
+                leu = True
+                self.close()
+        if leu is True:
+            return {'cpf': cpf}
+
     def info_del_paciente(self):
         sg.theme('Reddit')
         layout = [
             [sg.Text('= = = Excluir Paciente = = =', font=('Helvica', 20))],
             [sg.Text('Digite o CPF do paciente que deseja deletar: ')],
             [sg.Text('CPF (Apenas Números):', size=(20,1)), sg.InputText('', key='cpf')],
-            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
         ]
-        self.__window = sg.Window('Posto de Saúde').Layout(layout)
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
 
     def alterar_paciente(self):
         self.info_set_paciente()
@@ -181,7 +190,7 @@ class TelaPaciente():
         cpf = values['cpf']
         self.cpf_paciente(cpf)
         return {'cpf': cpf}
-    
+
     def info_set_paciente(self):
         sg.theme('Reddit')
         layout = [
@@ -190,7 +199,7 @@ class TelaPaciente():
             [sg.Text('CPF (Apenas Números):', size=(20,1)), sg.InputText('', key='cpf')],
             [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
         ]
-        self.__window = sg.Window('Posto de Saúde').Layout(layout)
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
 
     def info_setter_paciente(self):
         sg.theme('Reddit')
@@ -223,4 +232,3 @@ class TelaPaciente():
             string = string + 'Nome: ' + paciente['nome'] + ' CPF: ' + paciente['cpf'] + '\n\n'
         sg.Text('= = = Lista de Pacientes', font=('Helvica', 20))
         sg.Popup('Posto de Saúde', string)
-        

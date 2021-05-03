@@ -8,36 +8,37 @@ class TelaSistema():
 
     def opcoes_tela(self):
         self.window_posto()
-        button, values = self.__window.Read()
-        window, event, values = sg.read_all_windows()
+        button, event, values = sg.read_all_windows()
         opcao = 0
         if values['0'] or button in (None, 'Cancelar') or sg.WIN_CLOSED == event:
             opcao = 0
         if values['1']:
             opcao = 1
-        if values['2']:
+        elif values['2']:
             opcao = 2
-        if values['3']:
+        elif values['3']:
             opcao = 3
-        if values['4']:
+        elif values['4']:
             opcao = 4
-        if values['5']:
+        elif values['5']:
             opcao = 5
         self.close()
         return opcao
-    
-    def exibir_relatorio_geral(self):
-        dic = self.__controlador.relatorio_geral()
-        print(dic['nome'])
-        print('Número pacientes: ', dic['num_pacientes'])
-        print('número enfermeiros: ', dic['num_enfermeiros'])
-        print('Número vacinas: ', dic['qtd_vacinas'])
-        print('Número de vacinados em primeira dose: ', dic['uma_dose'])
-        print('Número de vacinados em segunda dose: ', dic['duas_doses'])
 
     def close(self):
         self.__window.close()
-    
+
+    def exibir_relatorio_geral(self):
+        sg.theme('Reddit')
+        dic = self.__controlador.relatorio_geral()
+        string = ''
+        string = string + 'Número pacientes: ' + str(dic['num_pacientes']) + '\n\n'
+        string = string + 'Número enfermeiros: ' + str(dic['num_enfermeiros']) + '\n\n'
+        string = string + 'Número vacinas: ' + str(dic['qtd_vacinas']) + '\n\n'
+        string = string + 'Número vacinados em primeira dose: ' + str(dic['uma_dose']) + '\n\n'
+        string = string + 'Número vacinados em segunda dose: ' + str(dic['duas_doses']) + '\n\n'
+        sg.Popup('Posto de Saúde', string)
+
     def window_posto(self):
         sg.theme('Reddit')
         layout = [
@@ -49,6 +50,6 @@ class TelaSistema():
             [sg.Radio('Opções vacina',"RD1", key='3')],
             [sg.Radio('Opções agendamento',"RD1", key='4')],
             [sg.Radio('Relatório geral do posto',"RD1", key='5')],
-            [sg.Button('Continuar'), sg.Cancel('Cancelar')]
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
         ]
         self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)

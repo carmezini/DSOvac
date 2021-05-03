@@ -1,13 +1,24 @@
 from view.tela_paciente import TelaPaciente 
-from model.paciente import Paciente 
+from model.paciente import Paciente
 
 class ControlPaciente():
-    def __init__(self):
+    def __init__(self, controlador_sistema):
         self.__pacientes = []
+        self.__controlador_sistema = controlador_sistema
         self.__tela_paciente = TelaPaciente(self)
     
-    def opcoes_paciente(self):
-        self.__tela_paciente.abre_tela_paciente()
+    def abre_tela_paciente(self):
+        opcoes = {1: self.incluir_paciente,
+                  2: self.deletar_paciente,
+                  3: self.alterar_paciente,
+                  4: self.lista_pacientes,
+                  0: self.encerra_sistema,
+                  6: self.volta
+                 }
+        while True:
+            opcao = self.__tela_paciente.opcoes_tela_paciente()
+            funcao = opcoes[opcao]
+            funcao()
 
     def incluir_paciente_padrao(self):
         paciente1 = Paciente('Artur Carmezini', 'Felipe Neves', 268, 1999, '07429362958')
@@ -68,3 +79,12 @@ class ControlPaciente():
         for paciente in self.__pacientes:
             pacientes.append({'nome': paciente.nome, 'cpf': paciente.cpf})
         self.__tela_paciente.mostrar_pacientes(pacientes)
+
+    def close(self):
+        self.__tela_paciente.close()
+    
+    def volta(self):
+        self.__controlador_sistema.abre_tela()
+    
+    def encerra_sistema(self):
+        self.__controlador_sistema.encerra_sistema()
