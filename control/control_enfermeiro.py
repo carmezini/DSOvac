@@ -2,12 +2,23 @@ from view.tela_enfermeiro import TelaEnfermeiro
 from model.enfermeiro import Enfermeiro
 
 class ControlEnfermeiro():
-    def __init__(self):
+    def __init__(self, controlador_sistema):
         self.__enfermeiros = []
+        self.__controlador_sistema = controlador_sistema
         self.__tela_enfermeiro = TelaEnfermeiro(self)
     
-    def opcoes_enfermeiro(self):
-        self.__tela_enfermeiro.abre_tela_enfermeiro()
+    def abre_tela_enfermeiro(self):
+        opcoes = {1: self.incluir_enfermeiro,
+                  2: self.deletar_enfermeiro,
+                  3: self.alterar_enfermeiro,
+                  4: self.lista_enfermeiros,
+                  0: self.encerra_sistema,
+                  6: self.volta}
+        
+        while True:
+            opcao = self.__tela_enfermeiro.opcoes_tela_enfermeiro()
+            funcao = opcoes[opcao]
+            funcao()
 
     def incluir_enfermeiro_padrao(self):
         enfermeiro1 = Enfermeiro('Thais Bardini', 'Gov. Celso Ramos', 32, '456546')
@@ -16,19 +27,19 @@ class ControlEnfermeiro():
         self.__enfermeiros.append(enfermeiro2)
 
     def incluir_enfermeiro(self):
-        info = self.__tela_enfermeiro.info_enfermeiro()
+        info = self.__tela_enfermeiro.incluir_enfermeiro()
         tem_enfermeiro = False
         for enfermeiro in self.__enfermeiros:
             if info['matricula'] == enfermeiro.matricula:
                 tem_enfermeiro = True
         if tem_enfermeiro is False:
-            enfermeiro = Enfermeiro(info['nome'], info['rua'], info['num_casa'], info['matricula'])
+            enfermeiro = Enfermeiro(info['nome_enfermeiro'], info['rua_enfermeiro'], info['num_casa_enfermeiro'], info['matricula'])
             self.__enfermeiros.append(enfermeiro)
         else:
             raise Exception()
 
     def deletar_enfermeiro(self):
-        info = self.__tela_enfermeiro.info_deletar_enfermeiro()
+        info = self.__tela_enfermeiro.deletar_enfermeiro()
         tem_enfermeiro = False
         for enfermeiro in self.__enfermeiros:
             if enfermeiro.matricula == info['matricula']:
@@ -42,7 +53,7 @@ class ControlEnfermeiro():
         tem_enfermeiro = False
         for enfermeiro in self.__enfermeiros:
             if enfermeiro.matricula == matricula['matricula']:
-                info = self.__tela_enfermeiro.info_alterar_enfermeiro()
+                info = self.__tela_enfermeiro.info_setter_enfermeiro()
                 enfermeiro.nome = info['nome']
                 enfermeiro.rua = info['rua']
                 enfermeiro.num_casa = info['num_casa']
@@ -56,4 +67,13 @@ class ControlEnfermeiro():
         return len(self.__enfermeiros)
 
     def lista_enfermeiros(self):
-        return self.__enfermeiros
+        enfermeiros = []
+        for enfermeiro in self.__enfermeiros:
+            enfermeiros.append({'nome_enfermeiro': enfermeiro.nome, 'matricula': enfermeiro.matricula})
+        self.__tela_enfermeiro.mostrar_enfermeiros(enfermeiros)
+    
+    def volta(self):
+        self.__controlador_sistema.abre_tela()
+    
+    def encerra_sistema(self):
+        self.__controlador_sistema.encerra_sistema()

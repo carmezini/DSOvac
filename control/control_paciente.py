@@ -15,6 +15,7 @@ class ControlPaciente():
                   0: self.encerra_sistema,
                   6: self.volta
                  }
+
         while True:
             opcao = self.__tela_paciente.opcoes_tela_paciente()
             funcao = opcoes[opcao]
@@ -79,9 +80,6 @@ class ControlPaciente():
         for paciente in self.__pacientes:
             pacientes.append({'nome': paciente.nome, 'cpf': paciente.cpf})
         self.__tela_paciente.mostrar_pacientes(pacientes)
-
-    def close(self):
-        self.__tela_paciente.close()
     
     def volta(self):
         self.__controlador_sistema.abre_tela()

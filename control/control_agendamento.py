@@ -10,17 +10,28 @@ class ControlAgendamento():
         self.__vacinados_primeira_dose = []
         self.__vacinados_segunda_dose = []
     
-    def opcoes_agendamento(self):
-        self.__tela_agendamento.abre_tela_agendamento()
+    def abre_tela_agendamento(self):
+        opcoes = {1: self.incluir_agendamento,
+                  2: self.deletar_agendamento,
+                  3: self.alterar_data_agendamento,
+                  4: self.lista_agendamentos,
+                  0: self.encerra_sistema,
+                  6: self.volta
+                 }
+
+        while True:
+            opcao = self.__tela_agendamento.opcoes_tela_agendamento()
+            funcao = opcoes[opcao]
+            funcao()
 
     def incluir_agendamento(self):
-        paciente = self.__tela_agendamento.info_agendamento()
+        paciente = self.__tela_agendamento.incluir_agendamento()
+        data = self.__tela_agendamento.calendar()
         enfermeiro = self.__controlador_sistema.obtem_enfermeiro()
         vacina = self.__controlador_sistema.obtem_vacina()
-        data = self.__tela_agendamento.info_data()
 
     def deletar_agendamento(self):
-        info = self.__tela_agendamento.info_deletar_agendamento()
+        info = self.__tela_agendamento.deletar_agendamento()
         tem_agendamento = False
         for agendamento in self.__agendamentos:
             if info['cpf'] == agendamento.paciente.cpf:
@@ -50,3 +61,10 @@ class ControlAgendamento():
     
     def num_vacinados_segunda_dose(self):
         return len(self.__vacinados_segunda_dose)
+
+    def volta(self):
+        self.__controlador_sistema.abre_tela()
+    
+    def encerra_sistema(self):
+        self.__controlador_sistema.encerra_sistema()
+

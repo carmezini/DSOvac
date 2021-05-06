@@ -2,12 +2,23 @@ from model.vacina import Vacina
 from view.tela_vacina import TelaVacina
 
 class ControlVacina():
-    def __init__(self):
+    def __init__(self, controlador_sistema):
         self.__vacinas = []
+        self.__controlador_sistema = controlador_sistema
         self.__tela_vacina = TelaVacina(self)
 
-    def opcoes_vacina(self):
-        self.__tela_vacina.abre_tela_vacina()
+    def abre_tela_vacina(self):
+        opcoes = {1: self.incluir_vacina,
+                  2: self.deletar_vacina,
+                  3: self.alterar_vacinas,
+                  4: self.lista_vacinas,
+                  0: self.encerra_sistema,
+                  6: self.volta}
+        
+        while True:
+            opcao = self.__tela_vacina.opcoes_tela_vacina()
+            funcao = opcoes[opcao]
+            funcao()
 
     def incluir_vacina_padrao(self):
         vacina1 = Vacina('DSOVAC', 100)
@@ -16,10 +27,10 @@ class ControlVacina():
         self.__vacinas.append(vacina2)
 
     def incluir_vacina(self):
-        info = self.__tela_vacina.info_vacina()
+        info = self.__tela_vacina.incluir_vacina()
         tem_vacina = False
         for vacina in self.__vacinas:
-            if info['nome'] == vacina.nome:
+            if info['nome'] == vacina.nome_fabricante:
                 tem_vacina = True
         if tem_vacina is False:
             vacina = Vacina(info['nome'], info['qtd']) 
@@ -28,7 +39,7 @@ class ControlVacina():
             raise Exception()
 
     def deletar_vacina(self):
-        info = self.__tela_vacina.info_deletar_vacina()
+        info = self.__tela_vacina.deletar_vacina()
         tem_vacina = False
         for vacina in self.__vacinas:
             if vacina.nome_fabricante == info['nome']:
@@ -43,7 +54,7 @@ class ControlVacina():
         tem_vacina = False
         for vacina in self.__vacinas:
             if nome['nome'] == vacina.nome_fabricante:
-                info = self.__tela_vacina.info_alterar_vacina()
+                info = self.__tela_vacina.info_setter_vacina()
                 vacina.nome_fabricante = info['nome']
                 vacina.quantidade = info['qtd']
                 tem_vacina = True
@@ -63,4 +74,13 @@ class ControlVacina():
         vacina.quantidade -= 1
 
     def lista_vacinas(self):
-        return self.__vacinas
+        vacinas = []
+        for vacina in self.__vacinas:
+            vacinas.append({'nome': vacina.nome_fabricante, 'qtd': vacina.quantidade})
+        self.__tela_vacina.mostrar_vacinas(vacinas)
+
+    def volta(self):
+        self.__controlador_sistema.abre_tela()
+
+    def encerra_sistema(self):
+        self.__controlador_sistema.encerra_sistema()

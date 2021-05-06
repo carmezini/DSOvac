@@ -29,27 +29,27 @@ class TelaSistema():
         self.__window.close()
 
     def exibir_relatorio_geral(self):
-        sg.theme('Reddit')
+        sg.theme('TealMono')
         dic = self.__controlador.relatorio_geral()
-        string = ''
+        string = '---------------------------------------- \n\n'
         string = string + 'Número pacientes: ' + str(dic['num_pacientes']) + '\n\n'
         string = string + 'Número enfermeiros: ' + str(dic['num_enfermeiros']) + '\n\n'
         string = string + 'Número vacinas: ' + str(dic['qtd_vacinas']) + '\n\n'
         string = string + 'Número vacinados em primeira dose: ' + str(dic['uma_dose']) + '\n\n'
         string = string + 'Número vacinados em segunda dose: ' + str(dic['duas_doses']) + '\n\n'
-        sg.Popup('Posto de Saúde', string)
+        sg.Popup('Relatório Geral do Posto', string, font=('Verdana', 13))
 
     def window_posto(self):
-        sg.theme('Reddit')
+        sg.theme('Material1')
         layout = [
-            [sg.Text('Posto de vacinação', font=('Helvica', 20))],
-            [sg.Text('Escolha sua opção', font=('Helvica', 15))],
-            [sg.Radio('Destruir posto',"RD1", key='0')],
-            [sg.Radio('Opções paciente',"RD1", key='1')],
-            [sg.Radio('Opções enfermeiro',"RD1", key='2')],
-            [sg.Radio('Opções vacina',"RD1", key='3')],
-            [sg.Radio('Opções agendamento',"RD1", key='4')],
-            [sg.Radio('Relatório geral do posto',"RD1", key='5')],
+            [sg.Text('Escolha sua opção', font=('Verdana', 16))],
+            [sg.Text('----------------------------------------------------------')],
+            [sg.Radio('Destruir posto',"RD1", key='0', font=('Verdana', 13))],
+            [sg.Radio('Opções paciente',"RD1", key='1', font=('Verdana', 13))],
+            [sg.Radio('Opções enfermeiro',"RD1", key='2', font=('Verdana', 13))],
+            [sg.Radio('Opções vacina',"RD1", key='3', font=('Verdana', 13))],
+            [sg.Radio('Opções agendamento',"RD1", key='4', font=('Verdana', 13))],
+            [sg.Radio('Relatório geral do posto',"RD1", key='5', font=('Verdana', 13))],
             [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
         ]
-        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
+        self.__window = sg.Window('Posto de Saúde', layout=layout, size=(300, 300), finalize=True)

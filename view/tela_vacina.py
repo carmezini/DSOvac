@@ -1,89 +1,182 @@
 from view.tela_sistema import TelaSistema
-from view.menu import Menu
+import PySimpleGUI as sg
 
 class TelaVacina():
     
     def __init__(self, controlador):
-        opcoes_vacina = {
-            0: 'Voltar',
-            1: 'Cadastrar Vacina',
-            2: 'Excluir Vacina',
-            3: 'Alterar info vacina',
-            4: 'Listar Vacinas'
-        }
-        self.__menu = Menu('\033[36:41mOpções Vacina\033[m ====', opcoes_vacina)
+        self.__window = None
         self.__controlador = controlador
+
+    def opcoes_tela_vacina(self):
+        self.window_vacina()
+        button, event, values = sg.read_all_windows()
+        opcao = 0
+        if event == 'Voltar':
+            opcao = 6
+        elif event == sg.WIN_CLOSED:
+            opcao = 0
+        elif values['1']:
+            opcao = 1
+        elif values['2']:
+            opcao = 2
+        elif values['3']:
+            opcao = 3
+        elif values['4']:
+            opcao = 4
+        elif values['5']:
+            opcao = 5
+        self.close()
+        return opcao
     
-    def abre_tela_vacina(self):
-        terminar = False
-        while not terminar:
-            menu = self.__menu
-            opcao = menu.pergunte()
-            if opcao == 0:
-                terminar = True
-            elif opcao == 1:
-                try:
-                    self.__controlador.incluir_vacina()
-                except Exception:
-                    print('Não foi possível adicionar a vacina.')
-                else:
-                    print('Vacina adicionada com sucesso.')
-            elif opcao == 2:
-                try:
-                    self.__controlador.deletar_vacina()
-                except Exception:
-                    print('A vacina informada não consta no estoque.')
-                else:
-                    print('Vacina deletada com sucesso.')
-            elif opcao == 3:
-                try:
-                    self.__controlador.alterar_vacinas()
-                except Exception:
-                    print('A vacina informada não consta no estoque.')
-                else:
-                    print('Vacina alterada com sucesso.')
-            elif opcao == 4:
-                self.mostrar_vacinas()
+    def close(self):
+        self.__window.Close()
 
-    def info_vacina(self):
-        print('\033[32:40m= = = Adicionar Vacina = = =\033[m')
-        nome = self.nome_vacina()
-        qtd = self.quantidade_vacina()
-        print('*=*=*=*')
-        return {'nome': nome, 'qtd': qtd}
-
-    def alterar_vacina(self):
-        nome = self.nome_vacina()
-        return {'nome': nome}
-
-    def info_alterar_vacina(self):
-        print('\033[32:41m= = = Alterar Vacina = = =\033[m')
-        print('Adicione as novas informações da vacina...')
-        nome = self.nome_vacina()
-        qtd = self.quantidade_vacina()
-        return {'nome': nome, 'qtd': qtd}
-    
-    def info_deletar_vacina(self):
-        print('\033[35:40m= = = Excluir Vacina = = =\033[m')
-        nome = input('Qual o nome do fabricante? ')
-        return {'nome': nome}
-    
-    def mostrar_vacinas(self):
-        print('\033[34:40m= = = Vacinas Cadastradas = = =\033[m')
-        for v in self.__controlador.lista_vacinas():
-            print(v)
-        print('*=*=*=*')
-
-    def nome_vacina(self):
-        nome = input('Digite o nome do fabricante? ')
-        return nome
-
-    def quantidade_vacina(self):
+    def nome_vacina(self, nome):
         leu = False
         while not leu:
             try:
-                qtd = int(input('Quantas doses deseja informar? '))
-                leu = True
+                nome = nome.title()
+                novo = nome.replace(' ', 'x')
+                if novo.isalnum():
+                    leu = True
+                if leu is False:
+                    raise Exception
+            except Exception:
+                sg.Popup('Apenas letras e números.')
+                nome = sg.popup_get_text('Digite novamente: ')
+        return nome
+
+    def quantidade_vacina(self, qtd):
+        leu = False
+        while not leu:
+            try:
+                if not qtd.isnumeric():
+                    raise ValueError
             except ValueError:
-                print('Digite apenas números inteiros.')
+                sg.PopupOK('Digite apenas números inteiros.')
+                qtd = sg.popup_get_text('Digite novamente: ')
+            else:
+                leu = True
         return qtd
+
+    def window_vacina(self):
+        sg.theme('LightGrey')
+        layout = [
+            [sg.Text('Escolha sua opção', font=('Verdana', 16))],
+            [sg.Text('----------------------------------------------------------')],
+            [sg.Radio('Incluir vacina', "RD1", key='1', font=('Verdana', 13))],
+            [sg.Radio('Excluir vacoma', "RD1", key='2', font=('Verdana', 13))],
+            [sg.Radio('Alterar info vacina', "RD1", key='3', font=('Verdana', 13))],
+            [sg.Radio('Listar vacinas', "RD1", key='4', font=('Verdana', 13))],
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
+        ]
+        self.__window = sg.Window('Opções Vacinas', layout=layout, size=(300, 300), finalize=True)
+
+    def incluir_vacina(self):
+        self.info_add_vacina()
+        button, event, values = sg.read_all_windows()
+        leu = False
+        while not leu:
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_vacina()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                nome = values['nome']
+                self.nome_vacina(nome)
+                qtd = values['qtd']
+                self.quantidade_vacina(qtd)
+                leu = True
+                self.close()
+            if leu is True:
+                return {'nome': nome, 'qtd': qtd}
+
+    def info_add_vacina(self):
+        sg.theme('LightGrey')
+        layout = [
+            [sg.Text('Incluir Vacina', font=('Helvica', 20))],
+            [sg.Text('Nome:', size=(20,1)), sg.InputText('', key='nome')],
+            [sg.Text('Quantidade:', size=(20,1)), sg.InputText('', key='qtd')],
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
+        ]
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
+
+    def deletar_vacina(self):
+        self.info_del_vacina()
+        button, event, values = sg.read_all_windows()
+        leu = False
+        while not leu:
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_vacina()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                nome = values['nome']
+                self.nome_vacina(nome)
+                leu = True
+                self.close()
+        if leu is True:
+            return {'nome': nome}
+
+    def info_del_vacina(self):
+        sg.theme('LightGrey')
+        layout = [
+            [sg.Text('Excluir Vacina', font=('Helvica', 20))],
+            [sg.Text('Digite o nome da vacina que deseja deletar: ')],
+            [sg.Text('Vacina: ', size=(20,1)), sg.InputText('', key='nome')],
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
+        ]
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
+
+    def alterar_vacina(self):
+        self.info_set_vacina()
+        button, event, values = sg.read_all_windows()
+        leu = False
+        while not leu:
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_vacina()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                nome = values['nome']
+                self.nome_vacina(nome)
+                leu = True
+                self.close()
+        if leu is True:
+            return {'nome': nome}
+
+    def info_set_vacina(self):
+        sg.theme('LightGrey')
+        layout = [
+            [sg.Text('Alterar Vacina', font=('Helvica', 20))],
+            [sg.Text('Digite o nome da vacina que deseja deletar: ')],
+            [sg.Text('Vacina: ', size=(20,1)), sg.InputText('', key='nome')],
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
+        ]
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
+
+    def info_setter_vacina(self):
+        sg.theme('LightGrey')
+        layout = [
+            [sg.Text('Alterar Vacina', font=('Helvica', 20))],
+            [sg.Text('Nome:', size=(20,1)), sg.InputText('', key='nome')],
+            [sg.Text('Quantidade:', size=(20,1)), sg.InputText('', key='qtd')],
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
+        ]
+        self.__window = sg.Window('Posto de Saúde').Layout(layout)
+        button, values = self.__window.Read()
+        nome = values['nome']
+        self.nome_vacina(nome)
+        qtd = values['qtd']
+        self.quantidade_vacina(qtd)
+        self.close()
+        return {'nome': nome, 'qtd': qtd}
+
+    def mostrar_vacinas(self, vacinas):
+        string = '---------------------------------------- \n\n'
+        for vacina in vacinas:
+            string = string + 'Nome: ' + vacina['nome'] + ' Quantidade: ' + str(vacina['qtd']) + '\n\n'
+        sg.Popup('Lista Vacinas', string, font=('Verdana', 13))

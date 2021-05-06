@@ -1,84 +1,176 @@
-from view.menu import Menu
+import PySimpleGUI as sg
 
 class TelaAgendamento():
     def __init__(self, controlador):
-        opcoes_agendamento = {
-            0: 'Voltar',
-            1: 'Cadastrar Agendamento',
-            2: 'Excluir Agendamento',
-            3: 'Alterar Agendamento',
-            4: 'Listar agendamentos'
-        }
-        self.__menu = Menu('\033[36:41mOpcões Agendamento\033[m ====', opcoes_agendamento)
+        self.__window = None
         self.__controlador = controlador
     
-    def abre_tela_agendamento(self):
-        terminar = False
-        while not terminar:
-            menu = self.__menu
-            opcao = menu.pergunte()
-            if opcao == 0:
-                terminar = True
-            elif opcao == 1:
-                try:
-                    self.__controlador.incluir_agendamento()
-                except Exception:
-                    print('Paciente ainda não cadastrado.')
-                else:
-                    print('Agendamento marcado com sucesso.')
-            elif opcao == 2:
-                try:
-                    self.__controlador.deletar_agendamento()
-                except Exception:
-                    print('Não foi possível deletar esse agendamento.')
-                else:
-                    print('Agendamento cancelado com sucesso.')
-            elif opcao == 3:
-                try:
-                    self.__controlador.alterar_agendamento()
-                except Exception:
-                    print('Não foi possível alterar esse agendamento.')
-                else:
-                    print('Agendamento alterado com sucesso.')
-            elif opcao == 4:
-                self.mostrar_agendamentos()
+    def opcoes_tela_agendamento(self):
+        self.window_agendamento()
+        button, event, values = sg.read_all_windows()
+        opcao = 0
+        if event == 'Voltar':
+            opcao = 6
+        elif event == sg.WIN_CLOSED:
+            opcao = 0
+        elif values['1']:
+            opcao = 1
+        elif values['2']:
+            opcao = 2
+        elif values['3']:
+            opcao = 3
+        elif values['4']:
+            opcao = 4
+        elif values['5']:
+            opcao = 5
+        self.close()
+        return opcao
     
-    def info_agendamento(self):
-        print('\033[32:40m= = = Adicionar Agendamento = = =\033[m')
-        cpf_paciente = self.cpf_paciente()
-        print('*=*=*=*')
-        return {'cpf_paciente': cpf_paciente}
+    def close(self):
+        self.__window.Close()
 
-    def info_deletar_agendamento(self):
-        print('\033[35:40m= = = Excluir Agendamento = = =\033[m')
-        cpf_paciente = self.cpf_paciente()
-        return {'cpf': cpf_paciente}
-    
-    def alterar_agendamento(self):
-        print('\033[35:41m= = = Alterar Agendamento = = =\033[m')
-        cpf_paciente = self.cpf_paciente()
-        return {'cpf': cpf_paciente}
-    
-    def mostrar_agendamentos(self):
-        print('\033[34:40m= = = Agendamentos Cadastradas = = =\033[m')
-        for a in self.__controlador.lista_agendamentos():
-            print(a)
-        print('*=*=*=*')
-    
-    def cpf_paciente(self):
+    def cpf_paciente(self, cpf):
         leu = False
         while not leu:
             try:
-                cpf_paciente = input('Qual o CPF do paciente (apenas números): ')
-                if not cpf_paciente.isnumeric():
+                if not cpf.isnumeric():
                     raise Exception
-                if len(cpf_paciente) != 11:
+                if len(cpf) != 11:
                     raise Exception
             except Exception:
-                print('CPF são 11 dígitos númericos.')
+                sg.PopupOK('CPF são 11 dígitos númericos.')
+                cpf = sg.popup_get_text('Digite o CPF novamente: ')
             else:
                 leu = True
-        return cpf_paciente
+        return cpf
+    
+    def calendar(self):
+        sg.theme('DarkAmber')
+        layout = [
+            [sg.CalendarButton('Clique para abrir o calendário', format='%d-%m-%Y')],
+            [sg.Button('?'), sg.Exit()]
+        ]
+        self.__window = sg.Window('Calendário', size=(290, 290), resizable=True).Layout(layout).finalize()
+        while True:
+            event, values = self.__window.Read()
+            self.__window.close()
+            if event == sg.WIN_CLOSED:
+                self.__window.close()
 
-    def info_data(self):
-        pass
+    def window_agendamento(self):
+        sg.theme('LightBrown')
+        layout = [
+            [sg.Text('Escolha sua opção', font=('Verdana', 16))],
+            [sg.Text('----------------------------------------------------------')],
+            [sg.Radio('Marcar agendamento', "RD1", key='1', font=('Verdana', 13))],
+            [sg.Radio('Desmarcar agendamento', "RD1", key='2', font=('Verdana', 13))],
+            [sg.Radio('Alterar agendamento', "RD1", key='3', font=('Verdana', 13))],
+            [sg.Radio('Listar agendamentos', "RD1", key='4', font=('Verdana', 13))],
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
+        ]
+        self.__window = sg.Window('Opções Agendamento', layout=layout, size=(300, 300), finalize=True)
+
+    def incluir_agendamento(self):
+        self.info_add_agendamento()
+        button, event, values = sg.read_all_windows()
+        leu = False
+        while not leu:
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_agendamento()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                cpf = values['cpf']
+                self.cpf_paciente(cpf)
+                leu = True
+                self.close()
+        if leu is True:
+            return {'cpf': cpf}
+
+    def info_add_agendamento(self):
+        sg.theme('LightBrown')
+        layout = [
+            [sg.Text('Marcar Agendamento', font=('Helvica', 20))],
+            [sg.Text('CPF (Apenas Números):', size=(20,1)), sg.InputText('', key='cpf')],
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
+        ]
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
+
+    def deletar_agendamento(self):
+        self.info_del_agendamento()
+        button, event, values = sg.read_all_windows()
+        leu = False
+        while not leu:
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_agendamento()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                cpf = values['cpf']
+                self.cpf_paciente(cpf)
+                leu = True
+                self.close()
+        if leu is True:
+            return {'cpf': cpf}
+
+    def info_del_agendamento(self):
+        sg.theme('LightBrown')
+        layout = [
+            [sg.Text('Desmarcar agendamento', font=('Verdana', 14))],
+            [sg.Text('Digite o CPF do paciente para desmarcar: ')],
+            [sg.Text('CPF (Apenas Números):', size=(20,1)), sg.InputText('', key='cpf')],
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
+        ]
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
+    
+    def alterar_agendamento(self):
+        self.info_set_agendamento()
+        button, event, values = sg.read_all_windows()
+        leu = False
+        while not leu:
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_agendamento()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                cpf = values['cpf']
+                self.cpf_paciente(cpf)
+                leu = True
+                self.close()
+        if leu is True:
+            return {'cpf': cpf}
+    
+    def info_set_agendamento(self):
+        sg.theme('LightBrown')
+        layout = [
+            [sg.Text('Alterar Agendamento', font=('Verdana', 14))],
+            [sg.Text('Digite o CPF do paciente que deseja deletar: ')],
+            [sg.Text('CPF (Apenas Números):', size=(20,1)), sg.InputText('', key='cpf')],
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
+        ]
+        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
+
+    def info_setter_agendamento(self):
+        sg.theme('LightBrown')
+        layout = [
+            [sg.Text('Alterar Agendamento', font=('Helvica', 20))],
+            [sg.Text('CPF (Apenas Números):', size=(20,1)), sg.InputText('', key='cpf')],
+            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+        ]
+        self.__window = sg.Window('Posto de Saúde').Layout(layout)
+        button, values = self.__window.Read()
+        nome = values['nome']
+        self.nome(nome)
+        cpf = values['cpf']
+        self.cpf_paciente(cpf)
+        self.close()
+        return {'nome': nome, 'cpf': cpf}
+    
+    def mostrar_agendamentos(self, agendamentos):
+        string = '---------------------------------------- \n\n'
+        for agendamento in agendamentos:
+            string = string + 'Nome: ' + agendamento['nome'] + ' CPF: ' + agendamento['cpf'] + '\n\n'
+        sg.Popup('Lista Pacientes', string, font=('Verdana', 13))

@@ -43,7 +43,7 @@ class TelaPaciente():
                 if leu is False:
                     raise Exception
             except Exception:
-                sg.PopupOK('Um nome deve conter apenas letras.')
+                sg.Popup('Um nome deve conter apenas letras.')
                 nome = sg.popup_get_text('Digite o nome novamente: ')
         return nome
 
@@ -105,17 +105,17 @@ class TelaPaciente():
         return ano  
 
     def window_paciente(self):
-        sg.theme('Reddit')
+        sg.theme('LightPurple')
         layout = [
-            [sg.Text('= = = Opções Paciente = = =', font=("Helvica", 25))],
-            [sg.Text('Escolha sua opção', font=("Helvica", 15))],
-            [sg.Radio('Incluir paciente', "RD1", key='1')],
-            [sg.Radio('Excluir paciente', "RD1", key='2')],
-            [sg.Radio('Alterar info paciente', "RD1", key='3')],
-            [sg.Radio('Listar pacientes', "RD1", key='4')],
+            [sg.Text('Escolha sua opção', font=('Verdana', 16))],
+            [sg.Text('----------------------------------------------------------')],
+            [sg.Radio('Incluir paciente', "RD1", key='1', font=('Verdana', 13))],
+            [sg.Radio('Excluir paciente', "RD1", key='2', font=('Verdana', 13))],
+            [sg.Radio('Alterar info paciente', "RD1", key='3', font=('Verdana', 13))],
+            [sg.Radio('Listar pacientes', "RD1", key='4', font=('Verdana', 13))],
             [sg.Button('Confirmar'), sg.Cancel('Voltar')]
         ]
-        self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
+        self.__window = sg.Window('Opções Paciente', layout=layout, size=(300, 300), finalize=True)
 
     def incluir_paciente(self):
         self.info_add_paciente()
@@ -144,9 +144,9 @@ class TelaPaciente():
             return {'nome': nome, 'rua': rua, 'num_casa': num_casa, 'ano': ano, 'cpf': cpf}
 
     def info_add_paciente(self):
-        sg.theme('Reddit')
+        sg.theme('LightPurple')
         layout = [
-            [sg.Text('= = = Incluir Paciente = = =', font=('Helvica', 20))],
+            [sg.Text('Incluir Paciente', font=('Helvica', 20))],
             [sg.Text('Nome:', size=(20,1)), sg.InputText('', key='nome')],
             [sg.Text('Rua:', size=(20,1)), sg.InputText('', key='rua')],
             [sg.Text('Nº casa:', size=(20,1)), sg.InputText('', key='num_casa')],
@@ -175,9 +175,9 @@ class TelaPaciente():
             return {'cpf': cpf}
 
     def info_del_paciente(self):
-        sg.theme('Reddit')
+        sg.theme('LightPurple')
         layout = [
-            [sg.Text('= = = Excluir Paciente = = =', font=('Helvica', 20))],
+            [sg.Text('Excluir Paciente', font=('Helvica', 20))],
             [sg.Text('Digite o CPF do paciente que deseja deletar: ')],
             [sg.Text('CPF (Apenas Números):', size=(20,1)), sg.InputText('', key='cpf')],
             [sg.Button('Confirmar'), sg.Cancel('Voltar')]
@@ -186,25 +186,36 @@ class TelaPaciente():
 
     def alterar_paciente(self):
         self.info_set_paciente()
-        button, values = self.__window.Read()
-        cpf = values['cpf']
-        self.cpf_paciente(cpf)
-        return {'cpf': cpf}
+        button, event, values = sg.read_all_windows()
+        leu = False
+        while not leu:
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_paciente()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                cpf = values['cpf']
+                self.cpf_paciente(cpf)
+                leu = True
+                self.close()
+        if leu is True:
+            return {'cpf': cpf}
 
     def info_set_paciente(self):
-        sg.theme('Reddit')
+        sg.theme('LightPurple')
         layout = [
-            [sg.Text('= = = Alterar Paciente = = =', font=('Helvica', 20))],
+            [sg.Text('Alterar Paciente', font=('Helvica', 20))],
             [sg.Text('Digite o CPF do paciente que deseja deletar: ')],
             [sg.Text('CPF (Apenas Números):', size=(20,1)), sg.InputText('', key='cpf')],
-            [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
+            [sg.Button('Confirmar'), sg.Cancel('Voltar')]
         ]
         self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
 
     def info_setter_paciente(self):
-        sg.theme('Reddit')
+        sg.theme('LightPurple')
         layout = [
-            [sg.Text('= = = Alterar Paciente = = =', font=('Helvica', 20))],
+            [sg.Text('Alterar Paciente', font=('Helvica', 20))],
             [sg.Text('Nome:', size=(20,1)), sg.InputText('', key='nome')],
             [sg.Text('Rua:', size=(20,1)), sg.InputText('', key='rua')],
             [sg.Text('Nº casa:', size=(20,1)), sg.InputText('', key='num_casa')],
@@ -224,11 +235,11 @@ class TelaPaciente():
         self.ano_paciente(ano)
         cpf = values['cpf']
         self.cpf_paciente(cpf)
+        self.close()
         return {'nome': nome, 'rua': rua, 'num_casa': num_casa, 'ano': ano, 'cpf': cpf}
     
     def mostrar_pacientes(self, pacientes):
-        string = ''
+        string = '---------------------------------------- \n\n'
         for paciente in pacientes:
             string = string + 'Nome: ' + paciente['nome'] + ' CPF: ' + paciente['cpf'] + '\n\n'
-        sg.Text('= = = Lista de Pacientes', font=('Helvica', 20))
-        sg.Popup('Posto de Saúde', string)
+        sg.Popup('Lista Pacientes', string, font=('Verdana', 13))

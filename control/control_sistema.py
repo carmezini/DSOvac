@@ -10,9 +10,9 @@ class ControlSistema():
     def __init__(self):
         self.__instance = None
         self.__controlador_agendamento = ControlAgendamento(self)
-        self.__controlador_enfermeiro = ControlEnfermeiro()
+        self.__controlador_enfermeiro = ControlEnfermeiro(self)
         self.__controlador_paciente = ControlPaciente(self)
-        self.__controlador_vacina = ControlVacina()
+        self.__controlador_vacina = ControlVacina(self)
         self.__controlador_posto_de_saude = ControlPostoDeSaude()
         self.__tela_sistema = TelaSistema(self)
 
@@ -42,13 +42,13 @@ class ControlSistema():
         self.__controlador_paciente.abre_tela_paciente()
 
     def opcoes_enfermeiro(self):
-        self.__controlador_enfermeiro.opcoes_enfermeiro()
+        self.__controlador_enfermeiro.abre_tela_enfermeiro()
 
     def opcoes_vacina(self):
-        self.__controlador_vacina.opcoes_vacina()
+        self.__controlador_vacina.abre_tela_vacina()
 
     def opcoes_agendamento(self):
-        self.__controlador_agendamento.opcoes_agendamento()
+        self.__controlador_agendamento.abre_tela_agendamento()
 
     def obtem_enfermeiro(self):
         lista_enfermeiro = self.__controlador_enfermeiro.lista_enfermeiros()
