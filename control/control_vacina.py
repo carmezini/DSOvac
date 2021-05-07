@@ -35,8 +35,9 @@ class ControlVacina():
         if tem_vacina is False:
             vacina = Vacina(info['nome'], info['qtd']) 
             self.__vacinas.append(vacina)
+            self.__tela_vacina.sucesso_incluir()
         else:
-            raise Exception()
+            self.__tela_vacina.erro_vacina()
 
     def deletar_vacina(self):
         info = self.__tela_vacina.deletar_vacina()
@@ -45,9 +46,10 @@ class ControlVacina():
             if vacina.nome_fabricante == info['nome']:
                 self.__vacinas.remove(vacina)
                 tem_vacina = True
+                self.__tela_vacina.sucesso_deletar()
                 break
         if tem_vacina is False:
-            raise Exception()
+            self.__tela_vacina.erro_sem_vacina()
 
     def alterar_vacinas(self):
         nome = self.__tela_vacina.alterar_vacina()
@@ -58,9 +60,10 @@ class ControlVacina():
                 vacina.nome_fabricante = info['nome']
                 vacina.quantidade = info['qtd']
                 tem_vacina = True
+                self.__tela_vacina.sucesso_alterar()
                 break
         if tem_vacina is False:
-            raise Exception()
+            self.__tela_vacina.erro_sem_vacina()
 
     def qtd_vacinas(self):
         qtd = 0
@@ -78,6 +81,9 @@ class ControlVacina():
         for vacina in self.__vacinas:
             vacinas.append({'nome': vacina.nome_fabricante, 'qtd': vacina.quantidade})
         self.__tela_vacina.mostrar_vacinas(vacinas)
+    
+    def listar_vacinas(self):
+        return self.__vacinas
 
     def volta(self):
         self.__controlador_sistema.abre_tela()

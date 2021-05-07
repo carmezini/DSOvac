@@ -43,8 +43,8 @@ class TelaPaciente():
                 if leu is False:
                     raise Exception
             except Exception:
-                sg.Popup('Um nome deve conter apenas letras.')
-                nome = sg.popup_get_text('Digite o nome novamente: ')
+                sg.Popup('Um nome deve conter apenas letras.', title='Nome')
+                nome = sg.popup_get_text('Digite o nome novamente: ', title='Nome')
         return nome
 
     def rua_paciente(self, rua):
@@ -58,8 +58,8 @@ class TelaPaciente():
                 if leu is False:
                     raise Exception()
             except Exception:
-               sg.PopupOK('Um nome deve conter apenas letras.')
-               rua = sg.popup_get_text('Digite o nome da rua novamente: ')
+               sg.PopupOK('Um nome deve conter apenas letras.', title='Nome rua')
+               rua = sg.popup_get_text('Digite o nome da rua novamente: ', title='Nome rua')
         return rua
 
     def num_casa_paciente(self, num_casa):
@@ -69,8 +69,8 @@ class TelaPaciente():
                 if not num_casa.isnumeric():
                     raise ValueError
             except ValueError:
-                sg.PopupOK('Digite apenas números.')
-                num_casa = sg.popup_get_text('Digite o número da casa novamente: ')
+                sg.PopupOK('Digite apenas números.', title='Nº casa')
+                num_casa = sg.popup_get_text('Digite o número da casa novamente: ', title='Nº casa')
             else:
                 leu = True
         return num_casa
@@ -84,8 +84,8 @@ class TelaPaciente():
                 if len(cpf) != 11:
                     raise Exception
             except Exception:
-                sg.PopupOK('CPF são 11 dígitos númericos.')
-                cpf = sg.popup_get_text('Digite o CPF novamente: ')
+                sg.PopupOK('CPF são 11 dígitos númericos.', title='CPF')
+                cpf = sg.popup_get_text('Digite o CPF novamente: ', title='CPF')
             else:
                 leu = True
         return cpf
@@ -98,8 +98,8 @@ class TelaPaciente():
                 if 2021 > ano < 1871:
                     raise Exception
             except Exception:
-                sg.Popup('O ano deve ser um número entre 1871 e 2021.')
-                ano = sg.popup_get_text('Digite o ano novamente: ')
+                sg.Popup('O ano deve ser um número entre 1871 e 2021.', title='Ano')
+                ano = sg.popup_get_text('Digite o ano novamente: ', title='Ano')
             else:
                 leu = True     
         return ano  
@@ -129,15 +129,15 @@ class TelaPaciente():
                 self.__controlador.encerra_sistema()
             else:
                 nome = values['nome']
-                self.nome(nome)
+                nome = self.nome(nome)
                 rua = values['rua']
-                self.rua_paciente(rua)
+                rua = self.rua_paciente(rua)
                 num_casa = values['num_casa']
-                self.num_casa_paciente(num_casa)
+                num_casa = self.num_casa_paciente(num_casa)
                 ano = values['ano']
-                self.ano_paciente(ano)
+                ano = self.ano_paciente(ano)
                 cpf = values['cpf']
-                self.cpf_paciente(cpf)
+                cpf = self.cpf_paciente(cpf)
                 leu = True
                 self.close()
         if leu is True:
@@ -168,7 +168,7 @@ class TelaPaciente():
                 self.__controlador.encerra_sistema()
             else:
                 cpf = values['cpf']
-                self.cpf_paciente(cpf)
+                cpf = self.cpf_paciente(cpf)
                 leu = True
                 self.close()
         if leu is True:
@@ -196,7 +196,7 @@ class TelaPaciente():
                 self.__controlador.encerra_sistema()
             else:
                 cpf = values['cpf']
-                self.cpf_paciente(cpf)
+                cpf = self.cpf_paciente(cpf)
                 leu = True
                 self.close()
         if leu is True:
@@ -226,15 +226,15 @@ class TelaPaciente():
         self.__window = sg.Window('Posto de Saúde').Layout(layout)
         button, values = self.__window.Read()
         nome = values['nome']
-        self.nome(nome)
+        nome = self.nome(nome)
         rua = values['rua']
-        self.rua_paciente(rua)
+        rua = self.rua_paciente(rua)
         num_casa = values['num_casa']
-        self.num_casa_paciente(num_casa)
+        num_casa = self.num_casa_paciente(num_casa)
         ano = values['ano']
-        self.ano_paciente(ano)
+        ano = self.ano_paciente(ano)
         cpf = values['cpf']
-        self.cpf_paciente(cpf)
+        cpf = self.cpf_paciente(cpf)
         self.close()
         return {'nome': nome, 'rua': rua, 'num_casa': num_casa, 'ano': ano, 'cpf': cpf}
     
@@ -243,3 +243,18 @@ class TelaPaciente():
         for paciente in pacientes:
             string = string + 'Nome: ' + paciente['nome'] + ' CPF: ' + paciente['cpf'] + '\n\n'
         sg.Popup('Lista Pacientes', string, font=('Verdana', 13))
+
+    def erro_cpf(self):
+        sg.PopupOK('CPF já existente...', title='CPF')
+    
+    def erro_sem_cpf(self):
+        sg.PopupOK('CPF não existe...', title='CPF')
+    
+    def sucesso_incluir(self):
+        sg.PopupOK('Paciente cadastrado com sucesso.')
+
+    def sucesso_deletar(self):
+        sg.PopupOK('Paciente deletado com sucesso.')
+    
+    def sucesso_alterar(self):
+        sg.PopupOK('Paciente alterado com sucesso.')

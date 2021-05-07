@@ -51,13 +51,13 @@ class ControlSistema():
         self.__controlador_agendamento.abre_tela_agendamento()
 
     def obtem_enfermeiro(self):
-        lista_enfermeiro = self.__controlador_enfermeiro.lista_enfermeiros()
+        lista_enfermeiro = self.__controlador_enfermeiro.listar_enfermeiros()
         rd.shuffle(lista_enfermeiro)
         enfermeiro = lista_enfermeiro[0]
         return {'enfermeiro': enfermeiro}
 
     def obtem_vacina(self):
-        lista_vacina = self.__controlador_vacina.lista_vacinas()
+        lista_vacina = self.__controlador_vacina.listar_vacinas()
         rd.shuffle(lista_vacina)
         vacina = lista_vacina[0]
         return {'vacina': vacina}
@@ -83,3 +83,6 @@ class ControlSistema():
 
     def control_vacina(self):
         return self.__controlador_vacina.lista_vacinas()
+    
+    def listar_pacientes(self):
+        return self.__controlador_paciente.listar_pacientes()

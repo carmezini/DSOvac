@@ -42,8 +42,8 @@ class TelaEnfermeiro():
                 if leu is False:
                     raise Exception
             except Exception:
-                sg.Popup('Um nome deve conter apenas letras.')
-                nome_enfermeiro = sg.popup_get_text('Digite o nome novamente: ')
+                sg.Popup('Um nome deve conter apenas letras.', title='Nome')
+                nome_enfermeiro = sg.popup_get_text('Digite o nome novamente: ', title='Nome')
         return nome_enfermeiro
 
     def rua_enfermeiro(self, rua_enfermeiro):
@@ -57,8 +57,8 @@ class TelaEnfermeiro():
                 if leu is False:
                     raise Exception()
             except Exception:
-                sg.Popup('Um nome deve conter apenas letras.')
-                rua = sg.popup_get_text('Digite o nome da rua novamente: ')
+                sg.Popup('Um nome deve conter apenas letras.', title='Nome rua')
+                rua_enfermeiro = sg.popup_get_text('Digite o nome da rua novamente: ', title='Nome rua')
         return rua_enfermeiro
 
     def num_casa_enfermeiro(self, num_casa_enfermeiro):
@@ -68,8 +68,8 @@ class TelaEnfermeiro():
                 if not num_casa_enfermeiro.isnumeric():
                     raise ValueError
             except ValueError:
-                sg.PopupOK('Digite apenas números.')
-                num_casa_enfermeiro = sg.popup_get_text('Digite o número da casa novamente: ')
+                sg.PopupOK('Digite apenas números.', title='Nº casa')
+                num_casa_enfermeiro = sg.popup_get_text('Digite o número da casa novamente: ', title='Nº casa')
             else:
                 leu = True
         return num_casa_enfermeiro
@@ -83,12 +83,12 @@ class TelaEnfermeiro():
                 if len(matricula) != 6:
                     raise Exception
             except Exception:
-                sg.Popup('Matrícula é definida por 6 dígitos númericos.')
-                sg.popup_get_text('Digite a matrícula novamente: ')
+                sg.PopupOK('Matrícula é definida por 6 dígitos númericos.', title='Matricula')
+                sg.popup_get_text('Digite a matrícula novamente: ', title='Matricula')
             else:
                 leu = True
         return matricula
-    
+
     def window_enfermeiro(self):
         sg.theme('LightGreen6')
         layout = [
@@ -114,13 +114,13 @@ class TelaEnfermeiro():
                 self.__controlador.encerra_sistema()
             else:
                 nome_enfermeiro = values['nome_enfermeiro']
-                self.nome_enfermeiro(nome_enfermeiro)
+                nome_enfermeiro = self.nome_enfermeiro(nome_enfermeiro)
                 rua_enfermeiro = values['rua_enfermeiro']
-                self.rua_enfermeiro(rua_enfermeiro)
+                rua_enfermeiro = self.rua_enfermeiro(rua_enfermeiro)
                 num_casa_enfermeiro = values['num_casa_enfermeiro']
-                self.num_casa_enfermeiro(num_casa_enfermeiro)
+                num_casa_enfermeiro = self.num_casa_enfermeiro(num_casa_enfermeiro)
                 matricula = values['matricula']
-                self.matricula(matricula)
+                matricula = self.matricula(matricula)
                 leu = True
                 self.close()
         if leu is True:
@@ -150,7 +150,7 @@ class TelaEnfermeiro():
                 self.__controlador.encerra_sistema()
             else:
                 matricula = values['matricula']
-                self.matricula(matricula)
+                matricula = self.matricula(matricula)
                 leu = True
                 self.close()
         if leu is True:
@@ -178,7 +178,7 @@ class TelaEnfermeiro():
                 self.__controlador.encerra_sistema()
             else:
                 matricula = values['matricula']
-                self.matricula(matricula)
+                matricula = self.matricula(matricula)
                 leu = True
                 self.close()
         if leu is True:
@@ -207,13 +207,13 @@ class TelaEnfermeiro():
         self.__window = sg.Window('Posto de Saúde').Layout(layout)
         button, values = self.__window.Read()
         nome_enfermeiro = values['nome_enfermeiro']
-        self.nome_enfermeiro(nome_enfermeiro)
+        nome_enfermeiro = self.nome_enfermeiro(nome_enfermeiro)
         rua_enfermeiro = values['rua_enfermeiro']
-        self.rua_enfermeiro(rua_enfermeiro)
+        rua_enfermeiro = self.rua_enfermeiro(rua_enfermeiro)
         num_casa_enfermeiro = values['num_casa_enfermeiro']
-        self.num_casa_enfermeiro(num_casa_enfermeiro)
+        num_casa_enfermeiro = self.num_casa_enfermeiro(num_casa_enfermeiro)
         matricula = values['matricula']
-        self.matricula(matricula)
+        matricula = self.matricula(matricula)
         self.close()
         return {'nome_enfermeiro': nome_enfermeiro, 'rua_enfermeiro': rua_enfermeiro, 'num_casa_enfermeiro': num_casa_enfermeiro, 'matricula': matricula}
 
@@ -222,3 +222,18 @@ class TelaEnfermeiro():
         for enfermeiro in enfermeiros:
             string = string + 'Nome: ' + enfermeiro['nome_enfermeiro'] + ' Matricula: ' + enfermeiro['matricula'] + '\n\n'
         sg.Popup('Lista Enfermeiros', string, font=('Verdana', 13))
+
+    def erro_matricula(self):
+        sg.PopupOK('Matrícula já existente...', title='Matrícula')
+    
+    def erro_sem_matricula(self):
+        sg.PopupOK('Matrícula não existe...', title='Matrícula')
+    
+    def sucesso_incluir(self):
+        sg.PopupOK('Enfermeiro cadastrado com sucesso.', title='Matrícula')
+
+    def sucesso_deletar(self):
+        sg.PopupOK('Enfermeiro deletado com sucesso.', title='Matrícula')
+
+    def sucesso_alterar(self):
+        sg.PopupOK('Enfermeiro alterado com sucesso.', title='Matrícula')

@@ -42,8 +42,9 @@ class ControlPaciente():
         if tem_paciente is False:
             paciente = Paciente(info['nome'], info['rua'], info['num_casa'], info['ano'], info['cpf'])
             self.__pacientes.append(paciente)
+            self.__tela_paciente.sucesso_incluir()
         else:
-            raise Exception()
+            self.__tela_paciente.erro_cpf()
 
     def deletar_paciente(self):
         info = self.__tela_paciente.deletar_paciente()
@@ -52,9 +53,10 @@ class ControlPaciente():
             if paciente.cpf == info['cpf']:
                 self.__pacientes.remove(paciente)
                 tem_paciente = True
+                self.__tela_paciente.sucesso_deletar()
                 break
         if tem_paciente is False:
-            raise Exception()
+            self.__tela_paciente.erro_sem_cpf()
 
     def alterar_paciente(self):
         cpf = self.__tela_paciente.alterar_paciente()
@@ -68,9 +70,10 @@ class ControlPaciente():
                 paciente.ano = info['ano']
                 paciente.cpf = info['cpf']
                 tem_paciente = True
+                self.__tela_paciente.sucesso_alterar()
                 break
         if tem_paciente is False:
-            raise Exception()
+            self.__tela_paciente.erro_sem_cpf()
 
     def num_pacientes(self):
         return len(self.__pacientes)
@@ -80,6 +83,9 @@ class ControlPaciente():
         for paciente in self.__pacientes:
             pacientes.append({'nome': paciente.nome, 'cpf': paciente.cpf})
         self.__tela_paciente.mostrar_pacientes(pacientes)
+    
+    def listar_pacientes(self):
+        return self.__pacientes
     
     def volta(self):
         self.__controlador_sistema.abre_tela()

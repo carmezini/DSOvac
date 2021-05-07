@@ -25,10 +25,21 @@ class ControlAgendamento():
             funcao()
 
     def incluir_agendamento(self):
-        paciente = self.__tela_agendamento.incluir_agendamento()
+        paciente_cpf = self.__tela_agendamento.incluir_agendamento()
         data = self.__tela_agendamento.calendar()
         enfermeiro = self.__controlador_sistema.obtem_enfermeiro()
         vacina = self.__controlador_sistema.obtem_vacina()
+        pacientes_cadastrados = self.__controlador_sistema.listar_pacientes()
+        tem_paciente = False
+        for paciente in pacientes_cadastrados:
+            if paciente_cpf['cpf'] == paciente.cpf:
+                agendamento = Agendamento(data, paciente, enfermeiro, vacina)
+                self.__agendamentos.append(agendamento)
+                tem_paciente = True
+                break
+        if tem_paciente is False:
+            raise Exception()
+            
 
     def deletar_agendamento(self):
         info = self.__tela_agendamento.deletar_agendamento()
@@ -54,7 +65,11 @@ class ControlAgendamento():
             raise Exception()
 
     def lista_agendamentos(self):
-        return self.__agendamentos
+        agendamentos = []
+        for agendamento in self.__agendamentos:
+            agendamentos.append({'nome': agendamento.paciente.nome, 'cpf': agendamento.paciente.cpf,
+                                 'data': agendamento.data})
+        self.__tela_agendamento.mostrar_agendamentos(agendamentos)
     
     def num_vacinados_primeira_dose(self):
         return len(self.__vacinados_primeira_dose)

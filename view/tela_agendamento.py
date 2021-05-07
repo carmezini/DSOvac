@@ -43,19 +43,6 @@ class TelaAgendamento():
             else:
                 leu = True
         return cpf
-    
-    def calendar(self):
-        sg.theme('DarkAmber')
-        layout = [
-            [sg.CalendarButton('Clique para abrir o calendário', format='%d-%m-%Y')],
-            [sg.Button('?'), sg.Exit()]
-        ]
-        self.__window = sg.Window('Calendário', size=(290, 290), resizable=True).Layout(layout).finalize()
-        while True:
-            event, values = self.__window.Read()
-            self.__window.close()
-            if event == sg.WIN_CLOSED:
-                self.__window.close()
 
     def window_agendamento(self):
         sg.theme('LightBrown')
@@ -96,6 +83,29 @@ class TelaAgendamento():
             [sg.Button('Confirmar'), sg.Cancel('Voltar')]
         ]
         self.__window = sg.Window('Posto de Saúde', layout=layout, finalize=True)
+
+    def calendar(self):
+        sg.theme('LightBrown')
+        layout = [[sg.T('Calendário')],
+          [sg.In('', size=(20,1), key='input')],
+          [sg.CalendarButton('Escolha a data', target='input', format=('%d/%m/%Y'), key='date')],
+          [sg.Ok(key=1)]]
+
+        self.__window = sg.Window('Calendário', grab_anywhere=False).Layout(layout)
+        event,values = self.__window.Read()
+        leu = False
+        while not leu:
+            event, values = self.__window.Read()
+            if event == 'Voltar':
+                self.close()
+                self.__controlador.abre_tela_agendamento()
+            elif event == sg.WINDOW_CLOSED:
+                self.__controlador.encerra_sistema()
+            else:
+                data = values['input']
+                leu = True
+        self.__window.close()
+        return data
 
     def deletar_agendamento(self):
         self.info_del_agendamento()
@@ -172,5 +182,5 @@ class TelaAgendamento():
     def mostrar_agendamentos(self, agendamentos):
         string = '---------------------------------------- \n\n'
         for agendamento in agendamentos:
-            string = string + 'Nome: ' + agendamento['nome'] + ' CPF: ' + agendamento['cpf'] + '\n\n'
-        sg.Popup('Lista Pacientes', string, font=('Verdana', 13))
+            string = string + 'Nome: ' + agendamento['nome'] + ' CPF: ' + agendamento['cpf'] + ' Data: ' + agendamento['data'] + '\n\n'
+        sg.Popup('Lista Agendamentos', string, font=('Verdana', 13))
