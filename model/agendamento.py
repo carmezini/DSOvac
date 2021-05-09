@@ -3,8 +3,9 @@ from model.enfermeiro import Enfermeiro
 from model.paciente import Paciente
 
 class Agendamento:
-    def __init__(self, data: str, paciente: Paciente, enfermeiro: Enfermeiro, vacina: Vacina):
+    def __init__(self, data: str, hora: str, paciente: Paciente, enfermeiro: Enfermeiro, vacina: Vacina):
         self.__data = data
+        self.__hora = hora
         self.__paciente = paciente
         self.__enfermeiro = enfermeiro
         self.__vacina = vacina
@@ -17,6 +18,15 @@ class Agendamento:
     def data(self, data):
         if isinstance(data, str):
             self.__data = data
+
+    @property
+    def hora(self):
+        return self.__hora
+    
+    @hora.setter
+    def hora(self, hora):
+        if isinstance(hora, str):
+            self.__hora = hora
 
     @property
     def paciente(self):

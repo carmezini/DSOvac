@@ -2,6 +2,7 @@ from view.tela_paciente import TelaPaciente
 from model.paciente import Paciente
 
 class ControlPaciente():
+
     def __init__(self, controlador_sistema):
         self.__pacientes = []
         self.__controlador_sistema = controlador_sistema

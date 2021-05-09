@@ -92,7 +92,6 @@ class TelaAgendamento():
           [sg.Ok(key=1)]]
 
         self.__window = sg.Window('Calendário', grab_anywhere=False).Layout(layout)
-        event,values = self.__window.Read()
         leu = False
         while not leu:
             event, values = self.__window.Read()
@@ -178,9 +177,27 @@ class TelaAgendamento():
         self.cpf_paciente(cpf)
         self.close()
         return {'nome': nome, 'cpf': cpf}
+
+    def hora(self):
+        hora = {0: '08:00',
+                1: '09:00',
+                2: '10:00',
+                3: '11:00',
+                4: '12:00',
+                5: '13:00',
+                6: '14:00',
+                7: '15:00',
+                8: '16:00',
+                9: '19:00'
+            }
+        return hora
+    
+    def erro_hora(self):
+        sg.PopupOK('Segunda dose deverá ser tomada 20 dias após a primeira...', title='hora')
+        
     
     def mostrar_agendamentos(self, agendamentos):
         string = '---------------------------------------- \n\n'
         for agendamento in agendamentos:
-            string = string + 'Nome: ' + agendamento['nome'] + ' CPF: ' + agendamento['cpf'] + ' Data: ' + agendamento['data'] + '\n\n'
-        sg.Popup('Lista Agendamentos', string, font=('Verdana', 13))
+            string = string + 'Nome: ' + agendamento['nome'] + ' CPF: ' + agendamento['cpf'] + ' Data: ' + agendamento['data'] + ' Hora: ' + agendamento['hora'] + '\n\n'
+        sg.Popup('Lista Agendamentos', string, font=('Verdana', 10))

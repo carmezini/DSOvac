@@ -3,7 +3,6 @@ from view.menu import Menu
 import PySimpleGUI as sg
 
 class TelaPaciente():
-    
     def __init__(self, controlador):
         self.__window = None
         self.__controlador = controlador

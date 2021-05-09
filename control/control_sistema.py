@@ -7,14 +7,20 @@ from control.control_posto_de_saude import ControlPostoDeSaude
 import random as rd
 
 class ControlSistema():
+    __instance = None
+
     def __init__(self):
-        self.__instance = None
         self.__controlador_agendamento = ControlAgendamento(self)
         self.__controlador_enfermeiro = ControlEnfermeiro(self)
         self.__controlador_paciente = ControlPaciente(self)
         self.__controlador_vacina = ControlVacina(self)
         self.__controlador_posto_de_saude = ControlPostoDeSaude()
         self.__tela_sistema = TelaSistema(self)
+    
+    def __new__(cls):
+        if ControlSistema.__instance is None:
+            ControlSistema.__instance = object.__new__(cls)
+        return ControlSistema.__instance
 
     def inicia_sistema(self):
         self.__controlador_paciente.incluir_paciente_padrao()

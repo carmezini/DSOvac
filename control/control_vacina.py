@@ -2,6 +2,7 @@ from model.vacina import Vacina
 from view.tela_vacina import TelaVacina
 
 class ControlVacina():
+
     def __init__(self, controlador_sistema):
         self.__vacinas = []
         self.__controlador_sistema = controlador_sistema

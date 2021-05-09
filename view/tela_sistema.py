@@ -44,7 +44,7 @@ class TelaSistema():
         layout = [
             [sg.Text('Escolha sua opção', font=('Verdana', 16))],
             [sg.Text('----------------------------------------------------------')],
-            [sg.Radio('Destruir posto',"RD1", key='0', font=('Verdana', 13))],
+            [sg.Radio('Finalizar sistema',"RD1", key='0', font=('Verdana', 13))],
             [sg.Radio('Opções paciente',"RD1", key='1', font=('Verdana', 13))],
             [sg.Radio('Opções enfermeiro',"RD1", key='2', font=('Verdana', 13))],
             [sg.Radio('Opções vacina',"RD1", key='3', font=('Verdana', 13))],

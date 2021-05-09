@@ -27,20 +27,29 @@ class ControlAgendamento():
     def incluir_agendamento(self):
         paciente_cpf = self.__tela_agendamento.incluir_agendamento()
         data = self.__tela_agendamento.calendar()
+        hora = self.__tela_agendamento.hora()
+        hora = hora[0]
         enfermeiro = self.__controlador_sistema.obtem_enfermeiro()
         vacina = self.__controlador_sistema.obtem_vacina()
         pacientes_cadastrados = self.__controlador_sistema.listar_pacientes()
-        tem_paciente = False
-        for paciente in pacientes_cadastrados:
-            if paciente_cpf['cpf'] == paciente.cpf:
-                agendamento = Agendamento(data, paciente, enfermeiro, vacina)
-                self.__agendamentos.append(agendamento)
-                tem_paciente = True
-                break
-        if tem_paciente is False:
-            raise Exception()
+        tem_paciente = True
+        for agendamento in self.__agendamentos:
+            if agendamento.data == data:
+                if agendamento.hora == hora:
+                    self.__tela_agendamento.erro_hora()
+                    tem_paciente = False
+                    break
+        if tem_paciente is True:
+            for paciente in pacientes_cadastrados:
+                if paciente_cpf['cpf'] == paciente.cpf:
+                    agendamento = Agendamento(data, hora, paciente, enfermeiro, vacina)
+                    self.__agendamentos.append(agendamento)
+                    if paciente not in self.__vacinados_primeira_dose:
+                        self.__vacinados_primeira_dose.append(paciente)
+                    else:
+                        self.__vacinados_segunda_dose.append(paciente)
+                        self.__vacinados_primeira_dose.remove(paciente)
             
-
     def deletar_agendamento(self):
         info = self.__tela_agendamento.deletar_agendamento()
         tem_agendamento = False
@@ -68,7 +77,7 @@ class ControlAgendamento():
         agendamentos = []
         for agendamento in self.__agendamentos:
             agendamentos.append({'nome': agendamento.paciente.nome, 'cpf': agendamento.paciente.cpf,
-                                 'data': agendamento.data})
+                                 'data': agendamento.data, 'hora': agendamento.hora})
         self.__tela_agendamento.mostrar_agendamentos(agendamentos)
     
     def num_vacinados_primeira_dose(self):
