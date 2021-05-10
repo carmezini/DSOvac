@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import pickle
 
 class DAO(ABC):
+    @abstractmethod
     def __init__(self, datasource=''):
         self.__datasource = datasource
         self.__cache = {}
@@ -24,14 +25,14 @@ class DAO(ABC):
         try:
             return self.__cache[key]
         except KeyError:
-            pass
+            pass #realizar exceção
 
     def remove(self, key):
         try:
             self.__cache.pop(key)
             self.__dump()
         except KeyError:
-            pass
-    
+            pass #realizar exceção
+
     def get_all(self):
         return self.__cache.values()

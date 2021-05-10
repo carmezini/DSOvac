@@ -1,10 +1,10 @@
 from view.tela_agendamento import TelaAgendamento 
 from model.agendamento import Agendamento
-import datetime as dt
+from model.DAO.agendamento_DAO import AgendamentoDAO
 
 class ControlAgendamento():
     def __init__(self, controlador_sistema):
-        self.__agendamentos = []
+        self.__agendamentos_DAO = AgendamentoDAO()
         self.__tela_agendamento = TelaAgendamento(self)
         self.__controlador_sistema = controlador_sistema
         self.__vacinados_primeira_dose = []
@@ -29,11 +29,13 @@ class ControlAgendamento():
         data = self.__tela_agendamento.calendar()
         hora = self.__tela_agendamento.hora()
         hora = hora[0]
-        enfermeiro = self.__controlador_sistema.obtem_enfermeiro()
-        vacina = self.__controlador_sistema.obtem_vacina()
+        enfermeiro = self.__controlador_sistema.listar_enfermeiros()
+        enfermeiro = enfermeiro[0]
+        vacina = self.__controlador_sistema.listar_vacinas()
+        vacina = vacina[0]
         pacientes_cadastrados = self.__controlador_sistema.listar_pacientes()
         tem_paciente = True
-        for agendamento in self.__agendamentos:
+        for agendamento in self.__agendamentos_DAO.get_all():
             if agendamento.data == data:
                 if agendamento.hora == hora:
                     self.__tela_agendamento.erro_hora()
@@ -43,7 +45,7 @@ class ControlAgendamento():
             for paciente in pacientes_cadastrados:
                 if paciente_cpf['cpf'] == paciente.cpf:
                     agendamento = Agendamento(data, hora, paciente, enfermeiro, vacina)
-                    self.__agendamentos.append(agendamento)
+                    self.__agendamentos_DAO.add(agendamento)
                     if paciente not in self.__vacinados_primeira_dose:
                         self.__vacinados_primeira_dose.append(paciente)
                     else:
@@ -53,9 +55,9 @@ class ControlAgendamento():
     def deletar_agendamento(self):
         info = self.__tela_agendamento.deletar_agendamento()
         tem_agendamento = False
-        for agendamento in self.__agendamentos:
+        for agendamento in self.__agendamentos_DAO.get_all():
             if info['cpf'] == agendamento.paciente.cpf:
-                self.__agendamentos.remove(agendamento)
+                self.__agendamentos_DAO.remove(agendamento)
                 tem_agendamento = True
                 break
         if tem_agendamento is False:
@@ -64,7 +66,7 @@ class ControlAgendamento():
     def alterar_data_agendamento(self):
         data_agendamento = self.__tela_agendamento.alterar_agendamento()
         tem_agendamento = False
-        for agendamento in self.__agendamentos:
+        for agendamento in self.__agendamentos_DAO.get_all():
             if agendamento.agendamento == ['matricula']:
                 info = self.__tela_agendamento.info_data()
                 agendamento.data = info['data']
@@ -75,10 +77,17 @@ class ControlAgendamento():
 
     def lista_agendamentos(self):
         agendamentos = []
-        for agendamento in self.__agendamentos:
+        for agendamento in self.__agendamentos_DAO.get_all():
             agendamentos.append({'nome': agendamento.paciente.nome, 'cpf': agendamento.paciente.cpf,
                                  'data': agendamento.data, 'hora': agendamento.hora})
         self.__tela_agendamento.mostrar_agendamentos(agendamentos)
+
+    def listar_agendamentos(self):
+        lista = self.__agendamentos_DAO.get_all()
+        lista_n = []
+        for agendamento in lista:
+            lista_n.append(agendamento)
+        return lista_n
     
     def num_vacinados_primeira_dose(self):
         return len(self.__vacinados_primeira_dose)

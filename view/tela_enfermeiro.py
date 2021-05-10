@@ -84,7 +84,7 @@ class TelaEnfermeiro():
                     raise Exception
             except Exception:
                 sg.PopupOK('Matrícula é definida por 6 dígitos númericos.', title='Matricula')
-                sg.popup_get_text('Digite a matrícula novamente: ', title='Matricula')
+                matricula = sg.popup_get_text('Digite a matrícula novamente: ', title='Matricula')
             else:
                 leu = True
         return matricula

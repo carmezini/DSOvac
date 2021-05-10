@@ -1,10 +1,11 @@
 from view.tela_paciente import TelaPaciente 
 from model.paciente import Paciente
+from model.DAO.paciente_DAO import PacienteDAO
 
 class ControlPaciente():
 
     def __init__(self, controlador_sistema):
-        self.__pacientes = []
+        self.__pacientes_DAO = PacienteDAO()
         self.__controlador_sistema = controlador_sistema
         self.__tela_paciente = TelaPaciente(self)
     
@@ -22,27 +23,15 @@ class ControlPaciente():
             funcao = opcoes[opcao]
             funcao()
 
-    def incluir_paciente_padrao(self):
-        paciente1 = Paciente('Artur Carmezini', 'Felipe Neves', 268, 1999, '07429362958')
-        paciente2 = Paciente('James Harden', 'AV. Santa Catarina', 13, 1991, '31233412436')
-        paciente3 = Paciente('LeBron James', 'Los Angeles', 23, 1990, '32143829896')
-        paciente4 = Paciente('Stephen Curry', 'Av. Oakland', 30, 1990, '32137090545')
-        paciente5 = Paciente('Damian Lillard', 'st. Oregon', 30, 1993, '09104823098')
-        self.__pacientes.append(paciente2)
-        self.__pacientes.append(paciente1)
-        self.__pacientes.append(paciente3)
-        self.__pacientes.append(paciente4)
-        self.__pacientes.append(paciente5)
-
     def incluir_paciente(self):
         info = self.__tela_paciente.incluir_paciente()
         tem_paciente = False
-        for paciente in self.__pacientes:
+        for paciente in self.__pacientes_DAO.get_all():
             if info['cpf'] == paciente.cpf:
                 tem_paciente = True
         if tem_paciente is False:
             paciente = Paciente(info['nome'], info['rua'], info['num_casa'], info['ano'], info['cpf'])
-            self.__pacientes.append(paciente)
+            self.__pacientes_DAO.add(paciente)
             self.__tela_paciente.sucesso_incluir()
         else:
             self.__tela_paciente.erro_cpf()
@@ -50,9 +39,9 @@ class ControlPaciente():
     def deletar_paciente(self):
         info = self.__tela_paciente.deletar_paciente()
         tem_paciente = False
-        for paciente in self.__pacientes:
+        for paciente in self.__pacientes_DAO.get_all():
             if paciente.cpf == info['cpf']:
-                self.__pacientes.remove(paciente)
+                self.__pacientes_DAO.remove(paciente.cpf)
                 tem_paciente = True
                 self.__tela_paciente.sucesso_deletar()
                 break
@@ -62,7 +51,7 @@ class ControlPaciente():
     def alterar_paciente(self):
         cpf = self.__tela_paciente.alterar_paciente()
         tem_paciente = False
-        for paciente in self.__pacientes:
+        for paciente in self.__pacientes_DAO.get_all():
             if cpf['cpf'] == paciente.cpf:
                 info = self.__tela_paciente.info_setter_paciente()
                 paciente.nome = info['nome']
@@ -70,6 +59,7 @@ class ControlPaciente():
                 paciente.num_casa = info['num_casa']
                 paciente.ano = info['ano']
                 paciente.cpf = info['cpf']
+                self.__pacientes_DAO.update(cpf['cpf'], paciente)
                 tem_paciente = True
                 self.__tela_paciente.sucesso_alterar()
                 break
@@ -81,13 +71,17 @@ class ControlPaciente():
 
     def lista_pacientes(self):
         pacientes = []
-        for paciente in self.__pacientes:
+        for paciente in self.__pacientes_DAO.get_all():
             pacientes.append({'nome': paciente.nome, 'cpf': paciente.cpf})
         self.__tela_paciente.mostrar_pacientes(pacientes)
     
     def listar_pacientes(self):
-        return self.__pacientes
-    
+        lista = self.__pacientes_DAO.get_all()
+        lista_n = []
+        for paciente in lista:
+            lista_n.append(paciente)
+        return lista_n
+
     def volta(self):
         self.__controlador_sistema.abre_tela()
     

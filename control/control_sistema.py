@@ -4,7 +4,6 @@ from control.control_enfermeiro import ControlEnfermeiro
 from control.control_paciente import ControlPaciente
 from control.control_vacina import ControlVacina
 from control.control_posto_de_saude import ControlPostoDeSaude
-import random as rd
 
 class ControlSistema():
     __instance = None
@@ -23,9 +22,6 @@ class ControlSistema():
         return ControlSistema.__instance
 
     def inicia_sistema(self):
-        self.__controlador_paciente.incluir_paciente_padrao()
-        self.__controlador_enfermeiro.incluir_enfermeiro_padrao()
-        self.__controlador_vacina.incluir_vacina_padrao()
         self.abre_tela()
 
     def abre_tela(self):
@@ -56,22 +52,6 @@ class ControlSistema():
     def opcoes_agendamento(self):
         self.__controlador_agendamento.abre_tela_agendamento()
 
-    def obtem_enfermeiro(self):
-        lista_enfermeiro = self.__controlador_enfermeiro.listar_enfermeiros()
-        rd.shuffle(lista_enfermeiro)
-        enfermeiro = lista_enfermeiro[0]
-        return {'enfermeiro': enfermeiro}
-
-    def obtem_vacina(self):
-        lista_vacina = self.__controlador_vacina.listar_vacinas()
-        rd.shuffle(lista_vacina)
-        vacina = lista_vacina[0]
-        return {'vacina': vacina}
-
-    def retorna_lista_paciente(self):
-        lista_paciente = self.__controlador_paciente.lista_pacientes()
-        return lista_paciente
-
     def relatorio_geral(self):
         num_pacientes = self.__controlador_paciente.num_pacientes()
         num_enfermeiros = self.__controlador_enfermeiro.num_enfermeiros()
@@ -84,11 +64,11 @@ class ControlSistema():
                 'uma_dose': vacinados_primeira_dose,
                 'duas_doses': vacinados_segunda_dose}
 
-    def control_enfermeiro(self):
-        return self.__controlador_enfermeiro.lista_enfermeiros()
+    def listar_enfermeiros(self):
+        return self.__controlador_enfermeiro.listar_enfermeiros()
 
-    def control_vacina(self):
-        return self.__controlador_vacina.lista_vacinas()
-    
+    def listar_vacinas(self):
+        return self.__controlador_vacina.listar_vacinas()
+
     def listar_pacientes(self):
         return self.__controlador_paciente.listar_pacientes()
