@@ -1,6 +1,9 @@
 import PySimpleGUI as sg
 import datetime as dt
 from random import choice
+from control.excecoes.excecao_cpf_invalido import ComCPFInvalidoException
+from control.excecoes.excecao_com_cpf import ComCPFException
+from control.excecoes.excecao_sem_cpf import SemCPFException
 
 class TelaAgendamento():
     def __init__(self, controlador):
@@ -36,7 +39,7 @@ class TelaAgendamento():
                 if len(cpf) != 11:
                     raise Exception
             except Exception:
-                sg.PopupOK('CPF são 11 dígitos númericos.')
+                sg.PopupOK(ComCPFInvalidoException())
                 cpf = sg.popup_get_text('Digite o CPF novamente: ')
             else:
                 leu = True
@@ -139,8 +142,20 @@ class TelaAgendamento():
         escolhido = choice(hora)
         return escolhido
     
-    def erro_hora(self):
-        sg.PopupOK('Segunda dose deverá ser tomada 20 dias após a primeira...', title='hora')
+    def erro_ja_tem_cpf(self):
+        sg.PopupOK(ComCPFException())
+
+    def erro_sem_cpf(self):
+        sg.PopupOK(SemCPFException())
+
+    def sucesso_incluir(self):
+        sg.PopupOK('Paciente cadastrado com sucesso.')
+
+    def sucesso_deletar(self):
+        sg.PopupOK('Paciente deletado com sucesso.')
+
+    def erro_cpf(self):
+        sg.PopupOK(ComCPFInvalidoException())
     
     def mostrar_agendamentos(self, agendamentos):
         string = '---------------------------------------- \n\n'

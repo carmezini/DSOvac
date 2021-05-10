@@ -3,7 +3,6 @@ from control.control_agendamento import ControlAgendamento
 from control.control_enfermeiro import ControlEnfermeiro
 from control.control_paciente import ControlPaciente
 from control.control_vacina import ControlVacina
-from control.control_posto_de_saude import ControlPostoDeSaude
 import random as rd
 
 class ControlSistema():
@@ -14,7 +13,6 @@ class ControlSistema():
         self.__controlador_enfermeiro = ControlEnfermeiro(self)
         self.__controlador_paciente = ControlPaciente(self)
         self.__controlador_vacina = ControlVacina(self)
-        self.__controlador_posto_de_saude = ControlPostoDeSaude()
         self.__tela_sistema = TelaSistema(self)
     
     def __new__(cls):

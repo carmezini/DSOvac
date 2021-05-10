@@ -28,7 +28,7 @@ class ControlAgendamento():
         paciente_cpf = self.__tela_agendamento.incluir_agendamento()
         for agendamento in self.__agendamentos_DAO.get_all():
             if agendamento.paciente.cpf == paciente_cpf['cpf']:
-                self.__tela_paciente.erro_cpf()
+                self.__tela_agendamento.erro_ja_tem_cpf()
                 tem_cpf = True
         if tem_cpf is False:
             dict_data = self.verifica_data()
@@ -44,6 +44,7 @@ class ControlAgendamento():
                         agendamento = Agendamento(data, hora, paciente, enfermeiro, vacina)
                         self.__agendamentos_DAO.add(agendamento)
                         self.__vacinados_primeira_dose.append(paciente)
+                        self.__tela_agendamento.sucesso_incluir()
                         vacina.usa_dose()
                         break
 
@@ -53,10 +54,11 @@ class ControlAgendamento():
         for agendamento in self.__agendamentos_DAO.get_all():
             if info['cpf'] == agendamento.paciente.cpf:
                 self.__agendamentos_DAO.remove(agendamento.paciente)
+                self.__tela_agendamento.sucesso_deletar()
                 tem_agendamento = True
                 break
         if tem_agendamento is False:
-            raise Exception()
+            self.__tela_agendamento.erro_sem_cpf()
 
     def lista_agendamentos(self):
         agendamentos = []

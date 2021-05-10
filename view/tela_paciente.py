@@ -1,6 +1,9 @@
 from view.tela_sistema import TelaSistema
-from view.menu import Menu
 import PySimpleGUI as sg
+from control.excecoes.excecao_cpf_invalido import ComCPFInvalidoException
+from control.excecoes.excecao_com_cpf import ComCPFException
+from control.excecoes.excecao_sem_cpf import SemCPFException
+
 
 class TelaPaciente():
     def __init__(self, controlador):
@@ -83,7 +86,7 @@ class TelaPaciente():
                 if len(cpf) != 11:
                     raise Exception
             except Exception:
-                sg.PopupOK('CPF são 11 dígitos númericos.', title='CPF')
+                sg.PopupOK(ComCPFInvalidoException())
                 cpf = sg.popup_get_text('Digite o CPF novamente: ', title='CPF')
             else:
                 leu = True
@@ -94,7 +97,7 @@ class TelaPaciente():
         leu = False
         while not leu:
             try:
-                if 2021 > ano < 1871:
+                if 2021 > int(ano) < 1871:
                     raise Exception
             except Exception:
                 sg.Popup('O ano deve ser um número entre 1871 e 2021.', title='Ano')
@@ -244,10 +247,10 @@ class TelaPaciente():
         sg.Popup('Lista Pacientes', string, font=('Verdana', 13))
 
     def erro_cpf(self):
-        sg.PopupOK('CPF já existente...', title='CPF')
+        sg.PopupOK(ComCPFException())
     
     def erro_sem_cpf(self):
-        sg.PopupOK('CPF não existe...', title='CPF')
+        sg.PopupOK(SemCPFException())
     
     def sucesso_incluir(self):
         sg.PopupOK('Paciente cadastrado com sucesso.')

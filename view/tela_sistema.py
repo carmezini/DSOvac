@@ -1,4 +1,3 @@
-from view.menu import Menu
 import PySimpleGUI as sg
 
 class TelaSistema():
