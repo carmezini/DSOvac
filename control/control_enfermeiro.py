@@ -65,7 +65,7 @@ class ControlEnfermeiro():
             self.__tela_enfermeiro.erro_sem_matricula()
 
     def num_enfermeiros(self):
-        return len(self.__enfermeiros)
+        return len(self.__enfermeiros_DAO.get_all())
 
     def lista_enfermeiros(self):
         enfermeiros = []

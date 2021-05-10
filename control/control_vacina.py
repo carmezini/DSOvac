@@ -65,7 +65,7 @@ class ControlVacina():
     def qtd_vacinas(self):
         qtd = 0
         soma = 0
-        for vacina in self.__vacinas:
+        for vacina in self.__vacinas_DAO.get_all():
             qtd = vacina.quantidade
             soma = soma + qtd
         return soma

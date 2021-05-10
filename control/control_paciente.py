@@ -67,7 +67,7 @@ class ControlPaciente():
             self.__tela_paciente.erro_sem_cpf()
 
     def num_pacientes(self):
-        return len(self.__pacientes)
+        return len(self.__pacientes_DAO.get_all())
 
     def lista_pacientes(self):
         pacientes = []

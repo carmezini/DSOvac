@@ -13,8 +13,7 @@ class ControlAgendamento():
     def abre_tela_agendamento(self):
         opcoes = {1: self.incluir_agendamento,
                   2: self.deletar_agendamento,
-                  3: self.alterar_data_agendamento,
-                  4: self.lista_agendamentos,
+                  3: self.lista_agendamentos,
                   0: self.encerra_sistema,
                   6: self.volta
                  }
@@ -25,51 +24,35 @@ class ControlAgendamento():
             funcao()
 
     def incluir_agendamento(self):
+        tem_cpf = False
         paciente_cpf = self.__tela_agendamento.incluir_agendamento()
-        data = self.__tela_agendamento.calendar()
-        hora = self.__tela_agendamento.hora()
-        hora = hora[0]
-        enfermeiro = self.__controlador_sistema.listar_enfermeiros()
-        enfermeiro = enfermeiro[0]
-        vacina = self.__controlador_sistema.listar_vacinas()
-        vacina = vacina[0]
-        pacientes_cadastrados = self.__controlador_sistema.listar_pacientes()
-        tem_paciente = True
         for agendamento in self.__agendamentos_DAO.get_all():
-            if agendamento.data == data:
-                if agendamento.hora == hora:
-                    self.__tela_agendamento.erro_hora()
-                    tem_paciente = False
-                    break
-        if tem_paciente is True:
-            for paciente in pacientes_cadastrados:
-                if paciente_cpf['cpf'] == paciente.cpf:
-                    agendamento = Agendamento(data, hora, paciente, enfermeiro, vacina)
-                    self.__agendamentos_DAO.add(agendamento)
-                    if paciente not in self.__vacinados_primeira_dose:
+            if agendamento.paciente.cpf == paciente_cpf['cpf']:
+                self.__tela_paciente.erro_cpf()
+                tem_cpf = True
+        if tem_cpf is False:
+            dict_data = self.verifica_data()
+            data = dict_data['data']
+            hora = dict_data['hora']
+            enfermeiro = self.__controlador_sistema.obtem_enfermeiro()
+            vacina = self.__controlador_sistema.obtem_vacina()
+            pacientes_cadastrados = self.__controlador_sistema.listar_pacientes()
+            tem_paciente = True
+            if tem_paciente is True:
+                for paciente in pacientes_cadastrados:
+                    if paciente_cpf['cpf'] == paciente.cpf:
+                        agendamento = Agendamento(data, hora, paciente, enfermeiro, vacina)
+                        self.__agendamentos_DAO.add(agendamento)
                         self.__vacinados_primeira_dose.append(paciente)
-                    else:
-                        self.__vacinados_segunda_dose.append(paciente)
-                        self.__vacinados_primeira_dose.remove(paciente)
-            
+                        vacina.usa_dose()
+                        break
+
     def deletar_agendamento(self):
         info = self.__tela_agendamento.deletar_agendamento()
         tem_agendamento = False
         for agendamento in self.__agendamentos_DAO.get_all():
             if info['cpf'] == agendamento.paciente.cpf:
-                self.__agendamentos_DAO.remove(agendamento)
-                tem_agendamento = True
-                break
-        if tem_agendamento is False:
-            raise Exception()
-
-    def alterar_data_agendamento(self):
-        data_agendamento = self.__tela_agendamento.alterar_agendamento()
-        tem_agendamento = False
-        for agendamento in self.__agendamentos_DAO.get_all():
-            if agendamento.agendamento == ['matricula']:
-                info = self.__tela_agendamento.info_data()
-                agendamento.data = info['data']
+                self.__agendamentos_DAO.remove(agendamento.paciente)
                 tem_agendamento = True
                 break
         if tem_agendamento is False:
@@ -79,7 +62,9 @@ class ControlAgendamento():
         agendamentos = []
         for agendamento in self.__agendamentos_DAO.get_all():
             agendamentos.append({'nome': agendamento.paciente.nome, 'cpf': agendamento.paciente.cpf,
-                                 'data': agendamento.data, 'hora': agendamento.hora})
+                                 'data': agendamento.data, 'hora': agendamento.hora,
+                                 'enfermeiro': agendamento.enfermeiro.nome, 'vacina': agendamento.vacina.nome_fabricante
+                                })
         self.__tela_agendamento.mostrar_agendamentos(agendamentos)
 
     def listar_agendamentos(self):
@@ -101,3 +86,40 @@ class ControlAgendamento():
     def encerra_sistema(self):
         self.__controlador_sistema.encerra_sistema()
 
+    def verifica_data(self):
+        tem_hora = True
+        data = self.__tela_agendamento.calendar()
+        hora = self.__tela_agendamento.hora()
+        for agendamento in self.__agendamentos_DAO.get_all():
+            if agendamento.data == data:
+                if agendamento.hora == hora:
+                    tem_hora = False
+                    self.__tela_agendamento.erro_hora()
+        if tem_hora is True:
+            return {'data': data, 'hora': hora}
+
+    def data_duas_doses(self, data):
+        tem_hora = True
+        hora = self.__tela_agendamento.hora()
+        dia = data[0:2]
+        dia = int(dia)
+        mes = data[3:5]
+        mes = int(mes)
+        ano = data[6:10]
+        ano = int(ano)
+        dia += 20
+        soma = 0
+        if dia > 30:
+            soma = dia - 30
+            dia = soma
+            mes += 1
+            if mes > 12:
+                mes = 1
+                ano += 1
+        data_segunda_dose = '{}/0{}/{}'.format(str(dia), str(mes), str(ano))
+
+        if tem_hora is True:
+            return {'data': data_segunda_dose, 'hora': hora}
+
+    def volta_agendamento(self):
+        self.abre_tela_agendamento()
