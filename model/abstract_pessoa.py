@@ -12,7 +12,12 @@ class Pessoa(ABC):
 
     @property
     @abstractmethod
-    def endereco(self):
+    def rua(self):
+        pass
+    
+    @property
+    @abstractmethod
+    def num_casa(self):
         pass
 
     @nome.setter
@@ -20,7 +25,12 @@ class Pessoa(ABC):
     def nome(self, nome: str):
         pass
 
-    @endereco.setter
+    @rua.setter
     @abstractmethod
-    def endereco(self, endereco: str):
+    def rua(self, rua: str):
+        pass
+
+    @num_casa.setter
+    @abstractmethod
+    def num_casa(self, num_casa: int):
         pass

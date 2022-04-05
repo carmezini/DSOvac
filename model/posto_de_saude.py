@@ -1,4 +1,4 @@
-from agendamento import Agendamento
+from model.agendamento import Agendamento
 
 class PostoDeSaude:
     def __init__(self, nome: str):
@@ -17,3 +17,6 @@ class PostoDeSaude:
     @property
     def agendamentos(self):
         return self.__agendamentos
+    
+    def __str__(self):
+        return 'Posto de Saúde {}'.format(self.__nome)
